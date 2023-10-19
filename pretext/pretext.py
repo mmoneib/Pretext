@@ -4,7 +4,7 @@ import reader
 import tokenizer
 import modeler
 import statistician
-from knowledge_graph import KnowledgeGraph
+from model.knowledge_graph import KnowledgeGraph
 
 if __name__=="__main__":
   parser = argparse.ArgumentParser(description='Pretext predicts text based on input document(s) (scope of knowledge), statistical formula (method of analysis), and a trigger text for the output along with its size (destiny).')
@@ -14,4 +14,4 @@ if __name__=="__main__":
   knowledgeGraph=KnowledgeGraph()
   for output in reader.read(args.knowledge_files):
     knowledgeGraph=modeler.model(tokenizer.tokenize(output), knowledgeGraph)
-  statistician.analyze(knowledgeGraph)
+  print(statistician.analyze(knowledgeGraph))
