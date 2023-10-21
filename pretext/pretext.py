@@ -14,4 +14,6 @@ if __name__=="__main__":
   knowledgeGraph=KnowledgeGraph()
   for output in reader.read(args.knowledge_files):
     knowledgeGraph=modeler.model(tokenizer.tokenize(output), knowledgeGraph)
+    #print()
+    #print(knowledgeGraph.get_graph())
   print(statistician.analyze(knowledgeGraph))
