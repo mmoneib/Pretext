@@ -1,4 +1,4 @@
-## List(token,List(linkedToken))
+## List(Tuple(token,List(linkedToken)))
 class KnowledgeGraph:
   def __init__(self):
     self.graph=[]
@@ -14,5 +14,5 @@ class KnowledgeGraph:
     return links
 
   def get_graph(self):
-    print(self.graph)
+    #print(self.graph)
     return self.graph
