@@ -1,10 +1,15 @@
 #!/usr/bin/python
 import argparse
-import reader
-import tokenizer
-import modeler
-import statistician
+from process import reader
+from process import tokenizer
+from process import modeler
+from process import statistician
 from model.knowledge_graph import KnowledgeGraph
+
+#TODO Allow differing grains of tokenization: 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144 chars, words, and keywords.
+#TODO Persist the models.
+#TODO Create the Choice model.
+#TODO Create input and prediction.
 
 if __name__=="__main__":
   parser = argparse.ArgumentParser(description='Pretext predicts text based on input document(s) (scope of knowledge), statistical formula (method of analysis), and a trigger text for the output along with its size (destiny).')
