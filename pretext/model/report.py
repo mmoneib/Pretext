@@ -9,7 +9,11 @@ class Report:
     self.report[token][position]=chosenLinkedToken
 
   def get_choice (self, token, position):
-    return  self.report[token][position]
+    positionalReportedTokens=self.report.get(token)
+    if positionalReportedTokens != None:
+      return  self.report.get(token).get(position)
+    else:
+      return None
 
   def get_report(self):
     return self.report
