@@ -19,5 +19,7 @@ def __predict(report, prompt, config):
   choice=None
   while len(prompt) > 0: #TODO Make the steps configurable
     choice=report.get_choice(prompt, config.predictUptoPosition)
+    if choice != None:
+      return choice
     prompt=prompt[1:len(prompt)] # Optimistic evaluation of the prompt from its entirety down to the last character.
-  return choice
+  return ""
