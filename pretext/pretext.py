@@ -8,12 +8,14 @@ from process import writer
 from model.configuration import Configuration
 from model.knowledge_graph import KnowledgeGraph
 
-#TODO Allow differing grains of tokenization: 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144 chars, words, and keywords.
+#TODO Check if output off multiple words tokens is correct.
+#TODO Check feasibility of tokenization by keywords.
 #TODO Persist the models.
 #TODO Make process modules int classes of input, process, and output workflow.
 #TODO Add logging.
 #TODO Add header comments to functions.
 #TODO Distinguish between word and part of word, like to and token.
+#TODO Add unit tests.
 
 if __name__=="__main__":
   parser = argparse.ArgumentParser(description='Pretext predicts text based on input document(s) (scope of knowledge), statistical formula (method of analysis), and a trigger text for the output along with its size (destiny).')
@@ -25,7 +27,19 @@ if __name__=="__main__":
   knowledgeGraph=KnowledgeGraph()
   for output in reader.read(args.knowledge_files):
     tokens=tokenizer.tokenize_by_char(output)
+    tokens.extend(tokenizer.tokenize_by_chars(output,2))
+    tokens.extend(tokenizer.tokenize_by_chars(output,3))
+    tokens.extend(tokenizer.tokenize_by_chars(output,5))
+    tokens.extend(tokenizer.tokenize_by_chars(output,8))
+    tokens.extend(tokenizer.tokenize_by_chars(output,13))
+    tokens.extend(tokenizer.tokenize_by_chars(output,21))
     tokens.extend(tokenizer.tokenize_by_word(output)) # Merges the results of tokenizer with the previous results.
+    tokens.extend(tokenizer.tokenize_by_words(output,2))
+    tokens.extend(tokenizer.tokenize_by_words(output,3))
+    tokens.extend(tokenizer.tokenize_by_words(output,5))
+    tokens.extend(tokenizer.tokenize_by_words(output,8))
+    tokens.extend(tokenizer.tokenize_by_words(output,13))
+    tokens.extend(tokenizer.tokenize_by_words(output,21))
     knowledgeGraph=modeler.model_by_next(tokens, knowledgeGraph)
   print()
   print(statistician.analyze(knowledgeGraph).get_report())
