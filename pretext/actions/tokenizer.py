@@ -35,19 +35,23 @@ def tokenize_by_words(text, numOfWords): # Another function as one char doesn't 
   buff=""
   count=0
   for c in text:
-    if c == ' ' or c == '\n': #TODO Allow space and new line before a word but not after.
+    if c == ' ' or c == '\n': #End of word or empty space.
       if word.endswith(' ') == False and word.endswith('\n') == False: # That it is not a string of empty spaces.
-        buff+=word # Can include empty spaces prior to the work.
         if count == numOfWords-1:
+          buff+=word # No space as it is the last word meant to be in the buffer.
           tokens.append(buff)
           buff=""
           word=""
           count=0
         else:
-          word+=c
-        count=count+1
+          buff+=word + " " # Space before the next word.
+          word=""
+          count=count+1
       #else:
         #word+=c # Adding empty space to empty spaces.
     else:
       word+=c
+  if word.isspace() == False and len(word)>0:
+    buff+=word
+    tokens.append(buff)
   return tokens
