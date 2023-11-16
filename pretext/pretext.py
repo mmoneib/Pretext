@@ -15,14 +15,16 @@ from model.knowledge_graph import KnowledgeGraph
 #TODO Add header comments to functions.
 #TODO Add more unit tests for effect of empty spaces on tokenization.
 #TODO ALlow assymmetrical modeling, like 3 unconsecutive chars predicting a word (instead of another 2 unconsecutive chars).
+#TODO Parse input directories.
 
 if __name__=="__main__":
-  parser = argparse.ArgumentParser(description='Pretext predicts text based on input document(s) (scope of knowledge), statistical formula (method of analysis), and a trigger text for the output along with its size (destiny).')
-  parser.add_argument('--knowledge-files', nargs='*',
-                    help='path to a file to be added to the cope of knowledge.')
+  parser = argparse.ArgumentParser(description="Pretext predicts text based on input document(s) (scope of knowledge), statistical formula (method of analysis), and a trigger text for the output along with its size (destiny).")
+  parser.add_argument("-k", "--knowledge-files", nargs='*',
+                    help="path to files to be added to the scope of knowledge.", required=True)
+  parser.add_argument("-n", "--infinite-prompting", help="cycle between prompts and subsequent predictions until |exit| is typed.", action="store_true")
   args = parser.parse_args()
   config=Configuration()
-  config.infinitePrompting=True
+  config.infinitePrompting=args.infinite_prompting
   knowledgeGraph=KnowledgeGraph()
   for output in reader.read(args.knowledge_files):
     tokens=tokenizer.tokenize_by_char(output)
