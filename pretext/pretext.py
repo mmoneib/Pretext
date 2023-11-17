@@ -17,6 +17,7 @@ from model.knowledge_graph import KnowledgeGraph
 #TODO ALlow assymmetrical modeling, like 3 unconsecutive chars predicting a word (instead of another 2 unconsecutive chars).
 #TODO Parse input directories.
 #TODO Use tokenization steps as an input parameter.
+#TODO validate tokenization by 2 chars.
 
 if __name__=="__main__":
   parser = argparse.ArgumentParser(description="Pretext predicts text based on input document(s) (scope of knowledge), statistical formula (method of analysis), and a trigger text for the output along with its size (destiny).")
@@ -29,20 +30,13 @@ if __name__=="__main__":
   config.infinitePrompting=args.infinite_prompting
   knowledgeGraph=KnowledgeGraph()
   for output in reader.read(args.knowledge_files):
-    tokens=tokenizer.tokenize_by_char(output)
-    tokens.extend(tokenizer.tokenize_by_chars(output,2)) # Function "extend" merges the results of tokenizer with the previous results.
-    tokens.extend(tokenizer.tokenize_by_chars(output,3))
-    tokens.extend(tokenizer.tokenize_by_chars(output,5))
-    tokens.extend(tokenizer.tokenize_by_chars(output,8))
-    tokens.extend(tokenizer.tokenize_by_chars(output,13))
-    tokens.extend(tokenizer.tokenize_by_chars(output,21))
-    tokens.extend(tokenizer.tokenize_by_word(output))
-    tokens.extend(tokenizer.tokenize_by_words(output,2))
-    tokens.extend(tokenizer.tokenize_by_words(output,3))
-    tokens.extend(tokenizer.tokenize_by_words(output,5))
-    tokens.extend(tokenizer.tokenize_by_words(output,8))
-    tokens.extend(tokenizer.tokenize_by_words(output,13))
-    tokens.extend(tokenizer.tokenize_by_words(output,21))
+    tokens=[]
+    if args.words_tokenization_steps:
+      for i in args.chars_tokenization_steps:
+        tokens.extend(tokenizer.tokenize_by_chars(output, int(i)))
+    if args.words_tokenization_steps:
+      for i in args.words_tokenization_steps:
+        tokens.extend(tokenizer.tokenize_by_words(output, int(i)))
     knowledgeGraph=modeler.model_by_next(tokens, knowledgeGraph)
   print()
   print(statistician.analyze(knowledgeGraph).get_report())

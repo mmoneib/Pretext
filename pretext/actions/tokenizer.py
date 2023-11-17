@@ -5,6 +5,8 @@ def tokenize_by_char(text):
   return tokens
 
 def tokenize_by_chars(text, numOfChars): # Another function as one char doesn't need a buffer.
+  if numOfChars == 1:
+    return tokenize_by_char(text)
   tokens=[]
   buff=""
   count=0
@@ -30,6 +32,8 @@ def tokenize_by_word(text):
   return tokens
 
 def tokenize_by_words(text, numOfWords): # Another function as one char doesn't need a buffer.
+  if numOfWords == 1:
+    return tokenize_by_word(text)
   tokens=[]
   word=""
   buff=""
