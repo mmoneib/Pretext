@@ -2,7 +2,7 @@
 import argparse
 from actions import tokenizer
 from actions import modeler
-from process import reader
+from process.reader import ReaderYieldingProcess
 from process import statistician
 from process import writer
 from model.configuration import Configuration
@@ -29,15 +29,14 @@ if __name__=="__main__":
   config=Configuration()
   config.infinitePrompting=args.infinite_prompting
   knowledgeGraph=KnowledgeGraph()
-  for output in reader.read(args.knowledge_files):
+  for output in ReaderYieldingProcess(args.knowledge_files).start():
     tokens=[]
-    if args.words_tokenization_steps:
+    if args.chars_tokenization_steps:
       for i in args.chars_tokenization_steps:
         tokens.extend(tokenizer.tokenize_by_chars(output, int(i)))
     if args.words_tokenization_steps:
       for i in args.words_tokenization_steps:
         tokens.extend(tokenizer.tokenize_by_words(output, int(i)))
     knowledgeGraph=modeler.model_by_next(tokens, knowledgeGraph)
-  print()
   print(statistician.analyze(knowledgeGraph).get_report())
   writer.write(statistician.analyze(knowledgeGraph),config)
