@@ -1,9 +1,9 @@
 #!/usr/bin/python
 import argparse
-from actions import tokenizer
 from actions import modeler
+from actions import statistician
+from actions import tokenizer
 from process.reader import ReaderYieldingProcess
-from process import statistician
 from process import writer
 from model.configuration import Configuration
 from model.knowledge_graph import KnowledgeGraph
@@ -38,5 +38,5 @@ if __name__=="__main__":
       for i in args.words_tokenization_steps:
         tokens.extend(tokenizer.tokenize_by_words(output, int(i)))
     knowledgeGraph=modeler.model_by_next(tokens, knowledgeGraph)
-  print(statistician.analyze(knowledgeGraph).get_report())
-  writer.write(statistician.analyze(knowledgeGraph),config)
+  print(statistician.top_of_histogram(knowledgeGraph).get_report())
+  writer.write(statistician.top_of_histogram(knowledgeGraph),config)

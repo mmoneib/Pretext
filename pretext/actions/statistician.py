@@ -1,12 +1,9 @@
 from model.analysis import Analysis
 from model.report import Report
 
-def analyze(knowledgeGraph):
-  return __top_of_histogram(knowledgeGraph)
-
-def __top_of_histogram(knowledgeGraph):
+def top_of_histogram(knowledgeGraph):
   topOfHistograms=Report()
-  histograms=__calculate_histograms(knowledgeGraph)
+  histograms=calculate_histograms(knowledgeGraph)
   for token, histoList in histograms.get_analysis().items():
     topScore=0
     for i in range(0, len(histoList)):
@@ -19,7 +16,7 @@ def __top_of_histogram(knowledgeGraph):
         topOfHistograms.add_choice(token,i,topLink)
   return topOfHistograms
 
-def __calculate_histograms(knowledgeGraph):
+def calculate_histograms(knowledgeGraph):
   histograms=Analysis()
   for tokenAndLinks in knowledgeGraph.get_graph():
     for i in range(0, len(tokenAndLinks[1])):
