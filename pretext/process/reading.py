@@ -1,4 +1,4 @@
-class ReaderYieldingProcess:
+class ReadingYieldingProcess:
 
   def __init__(self, fileNames):
     self.fileNames=fileNames

@@ -1,6 +1,6 @@
 #!/usr/bin/python
 import unittest
-import pretext # In order for this class to see th main project, pretext was made into a package by adding __init__.py.
+import pretext # In order for this class to see the main project, pretext was made into a package by adding __init__.py.
 from pretext import actions
 from pretext.actions import tokenizer
 
