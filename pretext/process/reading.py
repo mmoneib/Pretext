@@ -1,13 +1,10 @@
+from actions import files as FilesActions
+
 class ReadingYieldingProcess:
 
   def __init__(self, fileNames):
     self.fileNames=fileNames
 
-  def start(self):
+  def process(self):
     for fileName in self.fileNames:
-      yield self.__openText(fileName)
-
-  def __openText(self, fileName):
-    with open(fileName, 'r') as f:
-      data = f.read()
-      return data 
+      yield FilesActions.openTextFileAsReadOnly(fileName)

@@ -30,7 +30,7 @@ if __name__=="__main__":
   config.infinitePrompting=args.infinite_prompting
   config.charsTokenizationSteps=args.chars_tokenization_steps
   knowledgeGraph=KnowledgeGraph()
-  for text in ReaderYieldingProcess(args.knowledge_files).start():
+  for text in ReaderYieldingProcess(args.knowledge_files).process():
     tokens=[]
     if args.chars_tokenization_steps:
       for i in args.chars_tokenization_steps:
