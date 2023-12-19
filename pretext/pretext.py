@@ -1,8 +1,7 @@
 #!/usr/bin/python
 import argparse
-from actions import modeler
-from actions import statistician
-from actions import tokenizer
+from actions import text as TextActions
+from actions import token as TokenActions
 from process.reader import ReadingYieldingProcess
 from process import writing
 from model.configuration import Configuration
@@ -35,10 +34,10 @@ if __name__=="__main__":
     tokens=[]
     if args.chars_tokenization_steps:
       for i in args.chars_tokenization_steps:
-        tokens.extend(tokenizer.tokenize_by_chars(text, int(i)))
+        tokens.extend(TextActions.tokenize_by_chars(text, int(i)))
     if args.words_tokenization_steps:
       for i in args.words_tokenization_steps:
-        tokens.extend(tokenizer.tokenize_by_words(text, int(i)))
-    knowledgeGraph=modeler.model_by_next(tokens, knowledgeGraph)
-  print(statistician.top_of_histogram(knowledgeGraph).get_report())
-  writing.write(statistician.top_of_histogram(knowledgeGraph),config)
+        tokens.extend(TextActions.tokenize_by_words(text, int(i)))
+    knowledgeGraph=TokenActions.model_by_next(tokens, knowledgeGraph)
+  print(TokenActions.top_of_histogram(knowledgeGraph).get_report())
+  writing.write(TokenActions.top_of_histogram(knowledgeGraph),config)

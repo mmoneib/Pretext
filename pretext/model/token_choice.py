@@ -1,5 +1,5 @@
 ## Dict(token : Dict(position: chosenLinkedToken))
-class Report:
+class TokenChoice:
   def __init__(self):
     self.report={}
 
@@ -8,10 +8,10 @@ class Report:
       self.report[token]={}
     self.report[token][position]=chosenLinkedToken
 
-  def get_choice (self, token, position):
+  def get_choice(self, token, position):
     positionalReportedTokens=self.report.get(token)
     if positionalReportedTokens != None:
-      return  self.report.get(token).get(position)
+      return self.report.get(token).get(position)
     else:
       return None
 

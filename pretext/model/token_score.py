@@ -1,5 +1,5 @@
 ## Dict(token : Dict(position: Dict(linkedToken:score)))
-class Analysis:
+class TokenScore:
   def __init__(self):
     self.analysis={}
 

@@ -1,5 +1,5 @@
 ## List(Tuple(token,List(linkedToken)))
-class KnowledgeGraph:
+class TokenGraph:
   def __init__(self):
     self.graph=[]
 
