@@ -1,4 +1,5 @@
-from actions import token as TextActions
+from actions import text as TextActions
+import time
 
 class TokenizationParallel:
 
@@ -15,6 +16,13 @@ class TokenizationParallel:
     if args.words_tokenization_steps:
       for i in args.words_tokenization_steps:
         self.tokens.extend(TextActions.tokenize_by_words(text, int(i)))
+    isComplete = True
+    return self # For chaining.
 
-  def output(self):
+  def output_complete(self): # Busy waiting until output is available.
+    while isComplete == False:
+      time.sleep(1)  
+    return self.tokens
+
+  def output_maybe_incomplete(self): # Unguaranteed ouptut in case of multu-threads.
     return self.tokens
