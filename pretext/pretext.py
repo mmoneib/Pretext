@@ -6,7 +6,7 @@ from process.reading import ReadingYieldingProcess
 from process.tokenization import TokenizationParallel
 from process import writing
 from model.configuration import Configuration
-from model.knowledge_graph import KnowledgeGraph
+from model.token_graph import TokenGraph
 
 #TODO Check feasibility of tokenization by keywords.
 #TODO Persist the models.
@@ -31,11 +31,11 @@ if __name__=="__main__":
   config=Configuration()
   config.infinitePrompting=args.infinite_prompting
   config.charsTokenizationSteps=args.chars_tokenization_steps
-  knowledgeGraph=KnowledgeGraph()
+  tokenGraph=TokenGraph()
   for text in ReaderYieldingProcess(args.knowledge_files).process():
     tokenizationParallel = TokenizationParallel(config)
     tokenizationParallel.process()
     tokens=tokenizationParallel.output()
-    knowledgeGraph=TokenActions.model_by_next(tokens, knowledgeGraph)
-  print(TokenActions.top_of_histogram(knowledgeGraph).get_report())
-  writing.write(TokenActions.top_of_histogram(knowledgeGraph),config)
+    tokenGraph=TokenActions.model_by_next(tokens, tokenGraph)
+  print(TokenActions.top_of_histogram(tokenGraph).get_report())
+  writing.write(TokenActions.top_of_histogram(tokenGraph),config)
