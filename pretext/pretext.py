@@ -2,7 +2,8 @@
 import argparse
 from actions import text as TextActions
 from actions import token as TokenActions
-from process.reader import ReadingYieldingProcess
+from process.reading import ReadingYieldingProcess
+from process.tokenization import TokenizationParallel
 from process import writing
 from model.configuration import Configuration
 from model.knowledge_graph import KnowledgeGraph
@@ -18,6 +19,7 @@ from model.knowledge_graph import KnowledgeGraph
 #TODO Use tokenization steps as an input parameter.
 #TODO validate tokenization by 2 chars.
 #TODO Add process for each actions type to allow for distributive execution.
+#TODO Add multithreading to TokenizationParallel. Also, add blocking/non-blocking retrieval.
 
 if __name__=="__main__":
   parser = argparse.ArgumentParser(description="Pretext predicts text based on input document(s) (scope of knowledge), statistical formula (method of analysis), and a trigger text for the output along with its size (destiny).")
@@ -31,13 +33,9 @@ if __name__=="__main__":
   config.charsTokenizationSteps=args.chars_tokenization_steps
   knowledgeGraph=KnowledgeGraph()
   for text in ReaderYieldingProcess(args.knowledge_files).process():
-    tokens=[]
-    if args.chars_tokenization_steps:
-      for i in args.chars_tokenization_steps:
-        tokens.extend(TextActions.tokenize_by_chars(text, int(i)))
-    if args.words_tokenization_steps:
-      for i in args.words_tokenization_steps:
-        tokens.extend(TextActions.tokenize_by_words(text, int(i)))
+    tokenizationParallel = TokenizationParallel(config)
+    tokenizationParallel.process()
+    tokens=tokenizationParallel.output()
     knowledgeGraph=TokenActions.model_by_next(tokens, knowledgeGraph)
   print(TokenActions.top_of_histogram(knowledgeGraph).get_report())
   writing.write(TokenActions.top_of_histogram(knowledgeGraph),config)
