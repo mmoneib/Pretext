@@ -19,7 +19,7 @@ from model.token_graph import TokenGraph
 #TODO Use tokenization steps as an input parameter.
 #TODO validate tokenization by 2 chars.
 #TODO Add process for each actions type to allow for distributive execution.
-#TODO Add multithreading to TokenizationParallel and ModelingParallel. Also, add blocking/non-blocking retrieval.
+#TODO Add multithreading to TokenizationParallel and ModelingParallel.
 
 if __name__=="__main__":
   parser = argparse.ArgumentParser(description="Pretext predicts text based on input document(s) (scope of knowledge), statistical formula (method of analysis), and a trigger text for the output along with its size (destiny).")
