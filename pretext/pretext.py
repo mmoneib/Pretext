@@ -4,7 +4,9 @@ from actions import text as TextActions
 from actions import token as TokenActions
 from process.reading import ReadingYieldingProcess
 from process.tokenization import TokenizationParallel
-from process import writing
+from process.modeling import ModelingParallel
+from process.statistics import StatisticsProcedural
+from process.writing import WritingProcedural
 from model.configuration import Configuration
 from model.token_graph import TokenGraph
 
@@ -28,19 +30,20 @@ if __name__=="__main__":
   parser.add_argument("-n", "--infinite-prompting", help="cycle between prompts and subsequent predictions until |exit| is typed.", action="store_true")
   parser.add_argument("-w", "--words-tokenization-steps", help="list of integers specifying the number of words considered in each tokenization step", nargs='*')
   args = parser.parse_args()
-  config=Configuration()
-  config.infinitePrompting=args.infinite_prompting
-  config.charsTokenizationSteps=args.chars_tokenization_steps
+  config=Configuration(args)
   tokenGraph=TokenGraph()
-  for text in ReaderYieldingProcess(args.knowledge_files).process():
-    tokenizationParallel = TokenizationParallel(config)
+  for text in ReadingYieldingProcess(args.knowledge_files).process():
+    tokenizationParallel = TokenizationParallel(config, text)
     tokenizationParallel.process()
     tokens=tokenizationParallel.output()
+    print("Tokens: ", tokens)
     modelingParallel = ModelingParallel(tokens, tokenGraph)
     modelingParallel.process()
     tokenGraph = modelingParallel.output()
-  statisticsProcedural = StatisticsProxedural(tokenGraph)
+  print(tokenGraph.get_graph())
+  statisticsProcedural = StatisticsProcedural(tokenGraph)
   statisticsProcedural.process()
-  tokenScores = statisticsProcedural.process()
-  print(tokenScores.output())
-  writing.write(tokenScores.output(),config)
+  tokenChoices = statisticsProcedural.output()
+  print("Report:\n" , tokenChoices.get_report())
+  writingProcedural = WritingProcedural(tokenChoices, config)
+  writingProcedural.process()

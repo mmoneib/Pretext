@@ -1,25 +1,29 @@
-def write(report, config):
-  __write_with_prompt(report, config)
+from actions import token as TokenActions
 
-def __write_with_prompt(report, config):
-  print("Welcome to Pretext's chat. Write a prompt to get a predicted text or |exit| to exit the chat.")
-  while True:
-    prompt=input("Enter prompt: ")
-    if prompt == "|exit|":
-      print("Prompted to exit the chat. Bye!")
-      break
-    prediction=__predict(report, prompt, config)
-    if prediction == None:
-      prediction=""
-    print("Suggestion: " + prediction )
-    if config.infinitePrompting == False:
-      break
+class WritingProcedural:
 
-def __predict(report, prompt, config):
-  choice=None
-  while len(prompt) > 0: #TODO Make the steps configurable
-    choice=report.get_choice(prompt, config.predictUptoPosition)
-    if choice != None:
-      return choice
-    prompt=prompt[1:len(prompt)] # Optimistic evaluation of the prompt from its entirety down to the last character.
-  return ""
+  def __init__(self, tokenChoices, config):
+    self.tokenChoices = tokenChoices
+    self.predictUptoPosition = config.predictUptoPosition
+    self.infinitePrompting = config.infinitePrompting
+
+  def process(self):
+    self.__write_with_prompt()
+    return self
+
+  def __write_with_prompt(self):
+    print("Welcome to Pretext's chat. Write a prompt to get a predicted text or |exit| to exit the chat.")
+    while True:
+      prompt=input("Enter prompt: ")
+      if prompt == "|exit|":
+        print("Prompted to exit the chat. Bye!")
+        break
+      prediction=TokenActions.predict(self.tokenChoices, prompt, self.predictUptoPosition)
+      if prediction == None:
+        prediction=""
+      print("Suggestion: " + prediction )
+      if self.infinitePrompting == False:
+        break
+
+  def output(self):
+    print("")

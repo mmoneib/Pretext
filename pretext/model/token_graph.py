@@ -14,5 +14,13 @@ class TokenGraph:
     return links
 
   def get_graph(self):
-    #print(self.graph)
+    self.__print_graph()
     return self.graph
+
+  def __print_graph(self):
+    print("Graph: ", self.graph)
+
+  def __pretty_print_graph(self):
+    print("Graph:")
+    for item in self.graph:
+      print(item)

@@ -9,18 +9,18 @@ class ModelingParallel:
     self.isBlocking = True
 
   def process(self):
-    self.tokenGraph = TokenActions.modelByNext(self.tokens, self.tokenGraph)
-    isComplete = True
+    self.tokenGraph = TokenActions.model_by_next(self.tokens, self.tokenGraph)
+    self.isComplete = True
     return self # For chaining.
 
   def output(self):
-    if isBlocking:
-      return __output_complete(self)
+    if self.isBlocking:
+      return self.__output_complete()
     else:
-      return __output_maybe_incomplete(self)
+      return self.__output_maybe_incomplete()
 
   def __output_complete(self): # Busy waiting until output is available.
-    while isComplete == False:
+    while self.isComplete == False:
       time.sleep(1)  
     return self.tokenGraph
 
