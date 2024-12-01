@@ -16,12 +16,13 @@ from model.token_graph import TokenGraph
 #TODO Add logging.
 #TODO Add header comments to functions.
 #TODO Add more unit tests for effect of empty spaces on tokenization.
-#TODO ALlow assymmetrical modeling, like 3 unconsecutive chars predicting a word (instead of another 2 unconsecutive chars).
+#TODO Allow assymmetrical modeling, like 3 unconsecutive chars predicting a word (instead of another 2 unconsecutive chars).
 #TODO Parse input directories.
 #TODO Use tokenization steps as an input parameter.
 #TODO validate tokenization by 2 chars.
 #TODO Add process for each actions type to allow for distributive execution.
 #TODO Add multithreading to TokenizationParallel and ModelingParallel.
+#TODO Should we tokenize starting from every unit of text? or just from the end of the last token?
 
 if __name__=="__main__":
   parser = argparse.ArgumentParser(description="Pretext predicts text based on input document(s) (scope of knowledge), statistical formula (method of analysis), and a trigger text for the output along with its size (destiny).")
