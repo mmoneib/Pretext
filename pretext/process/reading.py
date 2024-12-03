@@ -1,4 +1,4 @@
-from actions import files as FilesActions
+from ..actions import files as FilesActions
 
 class ReadingYieldingProcess:
 

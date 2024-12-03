@@ -1,6 +1,6 @@
-from model.token_graph import TokenGraph
-from model.token_scores import TokenScores
-from model.token_choices import TokenChoices
+from ..model.token_graph import TokenGraph
+from ..model.token_scores import TokenScores
+from ..model.token_choices import TokenChoices
 
 def model_by_next(tokens, tokenGraph):
   for i in range(0, len(tokens)-1):

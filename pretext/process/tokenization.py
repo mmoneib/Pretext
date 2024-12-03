@@ -1,4 +1,4 @@
-from actions import text as TextActions
+from ..actions import text as TextActions
 import time
 
 class TokenizationParallel:

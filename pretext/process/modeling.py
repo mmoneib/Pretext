@@ -1,4 +1,4 @@
-from actions import token as TokenActions
+from ..actions import token as TokenActions
 import time
 
 class ModelingParallel:

@@ -6,7 +6,7 @@ class TokenGraph:
   def link(self, token, correspondingTokens):
     self.graph.append((token, correspondingTokens))
 
-  def getLinks(self, token):
+  def get_links(self, token):
     links=[]
     for tokenAndLinks in self.graph:
       if tokenAndLinks[0] == token:

@@ -1,15 +1,15 @@
 #!/usr/bin/python
 import argparse
-from pretext import actions
+import pretext
 from pretext.actions import text as TextActions
-from actions import token as TokenActions
-from process.reading import ReadingYieldingProcess
-from process.tokenization import TokenizationParallel
-from process.modeling import ModelingParallel
-from process.statistics import StatisticsProcedural
-from process.writing import WritingProcedural
-from model.configuration import Configuration
-from model.token_graph import TokenGraph
+from pretext.actions import token as TokenActions
+from pretext.process.reading import ReadingYieldingProcess
+from pretext.process.tokenization import TokenizationParallel
+from pretext.process.modeling import ModelingParallel
+from pretext.process.statistics import StatisticsProcedural
+from pretext.process.writing import WritingProcedural
+from pretext.model.configuration import Configuration
+from pretext.model.token_graph import TokenGraph
 
 #TODO Check feasibility of tokenization by keywords.
 #TODO Persist the models.
@@ -24,9 +24,6 @@ from model.token_graph import TokenGraph
 #TODO Add process for each actions type to allow for distributive execution.
 #TODO Add multithreading to TokenizationParallel and ModelingParallel.
 #TODO Should we tokenize starting from every unit of text? or just from the end of the last token?
-#TODO See what to expose inside __init__.py of the library.
-#TODO Add setup.py to ease packaging through pip.
-#TODO Incase of extreme optimization, modeling by only 1 next token may have a different structure without list of lists of neighbors.
 
 if __name__=="__main__":
   parser = argparse.ArgumentParser(description="Pretext predicts text based on input document(s) (scope of knowledge), statistical formula (method of analysis), and a trigger text for the output along with its size (destiny).")
