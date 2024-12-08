@@ -9,7 +9,7 @@ class ModelingParallel:
     self.isBlocking = True
 
   def process(self):
-    self.tokenGraph = TokenActions.model_by_next(self.tokens, self.tokenGraph)
+    self.tokenGraph = TokenActions.model_by_next(1, self.tokens, self.tokenGraph)
     self.isComplete = True
     return self # For chaining.
 

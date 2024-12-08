@@ -1,20 +1,21 @@
+# Relative imports are to allow importing from the tests package.
 from ..model.token_graph import TokenGraph
 from ..model.token_scores import TokenScores
 from ..model.token_choices import TokenChoices
 
-def model_by_next(tokens, tokenGraph):
+def model_by_next(numOfNextTokens, tokens, tokenGraph):
   for i in range(0, len(tokens)-1):
-    tokenGraph.link(tokens[i], [tokens[i+1]])
-    #tokenGraph.link(tokens[i+1], [""])
+     # Python gracefully doesn't throw errors when slicing out of bounds.
+     tokenGraph.link(tokens[i], tokens[i+1:i+numOfNextTokens+1])
   return tokenGraph
 
 def top_of_histogram(tokenGraph):
   topOfHistograms=TokenChoices()
   histograms=calculate_histograms(tokenGraph)
   for token, histoList in histograms.get_analysis().items():
-    topScore=0
     print(token, "|" ,histoList)
     for i in range(0, len(histoList)):
+      topScore=0
       topLink=None
       for linkedToken, score in histoList[i].items():
         if score > topScore:
