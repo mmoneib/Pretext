@@ -2,6 +2,7 @@
 import unittest
 from pretext.actions import token
 from pretext.model.token_graph import TokenGraph
+from pretext.model.token_choices import TokenChoices
 
 class TestTokenActions(unittest.TestCase):
 
@@ -78,6 +79,30 @@ class TestTokenActions(unittest.TestCase):
     self.assertEqual(topOfHistogram.get_report()["D"][0], "Don't")
     self.assertEqual(topOfHistogram.get_report()["D"][1], "mention")
     self.assertEqual(topOfHistogram.get_report()["D"][2], "it.")
+    
+  def test_predict_position_0_exact_token(self):
+    tokenChoices = TokenChoices()
+    tokenChoices.add_choice("As fa", 0, "r")
+    tokenChoices.add_choice("Tomorrow never", 0, " dies.")
+    token1 = "As fa"
+    token2 = "Tomorrow never"
+    prediction1 = token.predict(tokenChoices, token1, 0)
+    prediction2 = token.predict(tokenChoices, token2, 0)
+    self.assertEqual(prediction1, "r")
+    self.assertEqual(prediction2, " dies.")
+    
+  def test_predict_position_1_exact_token(self):
+    tokenChoices = TokenChoices()
+    tokenChoices.add_choice("As fa", 0, "r")
+    tokenChoices.add_choice("As fa", 1, " ")
+    tokenChoices.add_choice("Tomorrow never", 0, " dies.")
+    tokenChoices.add_choice("Tomorrow never", 1, " Nevertheless,")
+    token1 = "As fa"
+    token2 = "Tomorrow never"
+    prediction1 = token.predict(tokenChoices, token1, 1)
+    prediction2 = token.predict(tokenChoices, token2, 1)
+    self.assertEqual(prediction1, "r ")
+    self.assertEqual(prediction2, " dies. Nevertheless,")
     
 if __name__=="__main__":
   unittest.main() 

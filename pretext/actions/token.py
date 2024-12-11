@@ -33,10 +33,11 @@ def calculate_histograms(tokenGraph):
   return histograms
 
 def predict(tokenChoices, token, predictUpToPosition):
-  choice=None
   while len(token) > 0: #TODO Make the steps configurable
-    choice=tokenChoices.get_choice(token, predictUpToPosition)
-    if choice != None:
+    choice=""
+    for p in range(0, predictUpToPosition + 1):
+      choice += tokenChoices.get_choice(token, p)
+    if choice != "":
       return choice
-    token=token[1:len(token)] # Optimistic evaluation of the prompt from its entirety down to the last character.
-  return ""
+    token=token[1:len(token)] # Optimistic flow of evaluation of the prompt from its entirety down to the last character.
+  return "" # We could also return choice, but this is more explicit.
