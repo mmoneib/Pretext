@@ -1,23 +1,21 @@
-## Dict(token : Dict(position: chosenLinkedToken))
+## Dict(token : List(chosenLinkedToken)
 class TokenChoices:
   def __init__(self):
-    self.report={}
+    self.choices={}
 
   def add_choice(self, token, position, chosenLinkedToken):
-    if self.report.get(token) == None:
-      self.report[token]={}
+    if self.choices.get(token) == None:
+      self.choices[token]=[]
     #print("Added Token:", token, " ", position, " ", chosenLinkedToken)
-    self.report[token][position]=chosenLinkedToken
+    self.choices[token].insert(position, chosenLinkedToken)
 
   def get_choice(self, token, position):
-    positionalReportedTokens=self.report.get(token)
-    if positionalReportedTokens != None:
-      #print(self.report.get(token).get(position))
-      return self.report.get(token).get(position)
+    positionalReportedTokens=self.choices.get(token)
+    if positionalReportedTokens != None and len(positionalReportedTokens) > position:
+      return positionalReportedTokens[position]
     else:
       return None
 
-  def get_report(self):
-    print("Report: ", self.report)
-    return self.report
-    
+  def get_choices(self):
+    print("Choices: ", self.choices)
+    return self.choices

@@ -64,11 +64,11 @@ class TestTokenActions(unittest.TestCase):
     tokenGraph.link("C", ["Can't", "think", "of", "anything", "better."])
     tokenGraph.link("D", ["Didn't", "mention", "it"])
     histograms = token.calculate_histograms(tokenGraph)
-    self.assertEqual(histograms.get_analysis()["A"][0]["As"], 1)
- #  self.assertEqual(histograms.get_analysis()["A"][1]["As"], None)
-    self.assertEqual(histograms.get_analysis()["A"][2]["like"], 1)
-    self.assertEqual(histograms.get_analysis()["C"][0]["Can't"], 2)
-    self.assertEqual(histograms.get_analysis()["D"][1]["mention"], 2)
+    self.assertEqual(histograms.get_scores()["A"][0]["As"], 1)
+ #  self.assertEqual(histograms.get_scores()["A"][1]["As"], None)
+    self.assertEqual(histograms.get_scores()["A"][2]["like"], 1)
+    self.assertEqual(histograms.get_scores()["C"][0]["Can't"], 2)
+    self.assertEqual(histograms.get_scores()["D"][1]["mention"], 2)
 
   def test_top_of_histogram(self):
     tokenGraph = TokenGraph()
@@ -76,9 +76,9 @@ class TestTokenActions(unittest.TestCase):
     tokenGraph.link("D", ["Does", "she", "know?"])
     tokenGraph.link("D", ["Didn't", "mention", "it."])
     topOfHistogram = token.top_of_histogram(tokenGraph)
-    self.assertEqual(topOfHistogram.get_report()["D"][0], "Don't")
-    self.assertEqual(topOfHistogram.get_report()["D"][1], "mention")
-    self.assertEqual(topOfHistogram.get_report()["D"][2], "it.")
+    self.assertEqual(topOfHistogram.get_choices()["D"][0], "Don't")
+    self.assertEqual(topOfHistogram.get_choices()["D"][1], "mention")
+    self.assertEqual(topOfHistogram.get_choices()["D"][2], "it.")
     
   def test_predict_position_0_exact_token(self):
     tokenChoices = TokenChoices()
@@ -103,6 +103,26 @@ class TestTokenActions(unittest.TestCase):
     prediction2 = token.predict(tokenChoices, token2, 1)
     self.assertEqual(prediction1, "r ")
     self.assertEqual(prediction2, " dies. Nevertheless,")
+    
+  def test_predict_position_1_partial(self):
+    tokenChoices = TokenChoices()
+    tokenChoices.add_choice("As fa", 0, "r")
+    tokenChoices.add_choice("As fa", 1, " ")
+    tokenChoices.add_choice("Tomorrow never", 0, " dies.")
+    tokenChoices.add_choice("Tomorrow never", 1, " Nevertheless,")
+    token1 = "known. As fa"
+    token2 = "yesterday. Tomorrow never"
+    prediction1 = token.predict(tokenChoices, token1, 1)
+    prediction2 = token.predict(tokenChoices, token2, 1)
+    self.assertEqual(prediction1, "r ")
+    self.assertEqual(prediction2, " dies. Nevertheless,")
+    
+  def test_predict_position_beyond_available(self):
+    tokenChoices = TokenChoices()
+    tokenChoices.add_choice("As fa", 0, "r")
+    token1 = "As fa"
+    prediction1 = token.predict(tokenChoices, token1, 3)
+    self.assertEqual(prediction1, "r")
     
 if __name__=="__main__":
   unittest.main() 

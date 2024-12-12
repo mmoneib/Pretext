@@ -1,4 +1,5 @@
 ## List(Tuple(token,List(linkedToken)))
+# Tuple is used to allow multiple entries.
 class TokenGraph:
   def __init__(self):
     self.graph=[]

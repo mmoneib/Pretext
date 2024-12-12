@@ -16,14 +16,14 @@ from pretext.model.token_graph import TokenGraph
 #TODO Make process modules into classes of input, process, and output workflow.
 #TODO Add logging.
 #TODO Add header comments to functions.
-#TODO Add more unit tests for effect of empty spaces on tokenization.
-#TODO Allow assymmetrical modeling, like 3 unconsecutive chars predicting a word (instead of another 2 unconsecutive chars).
 #TODO Parse input directories.
 #TODO Use tokenization steps as an input parameter.
-#TODO validate tokenization by 2 chars.
-#TODO Add process for each actions type to allow for distributive execution.
 #TODO Add multithreading to TokenizationParallel and ModelingParallel.
 #TODO Should we tokenize starting from every unit of text? or just from the end of the last token?
+#TODO What would bring the generation to a closure?
+#TODO Make all config parameters available in the command line.
+#TODO Add integration tests.
+#TODO Update structure of tests directory.
 
 if __name__=="__main__":
   parser = argparse.ArgumentParser(description="Pretext predicts text based on input document(s) (scope of knowledge), statistical formula (method of analysis), and a trigger text for the output along with its size (destiny).")
@@ -46,6 +46,6 @@ if __name__=="__main__":
   statisticsProcedural = StatisticsProcedural(tokenGraph)
   statisticsProcedural.process()
   tokenChoices = statisticsProcedural.output()
-  print("Report:\n" , tokenChoices.get_report())
+  print("Report:\n" , tokenChoices.get_choices())
   writingProcedural = WritingProcedural(tokenChoices, config)
   writingProcedural.process()

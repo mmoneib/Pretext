@@ -12,7 +12,7 @@ def model_by_next(numOfNextTokens, tokens, tokenGraph):
 def top_of_histogram(tokenGraph):
   topOfHistograms=TokenChoices()
   histograms=calculate_histograms(tokenGraph)
-  for token, histoList in histograms.get_analysis().items():
+  for token, histoList in histograms.get_scores().items():
     print(token, "|" ,histoList)
     for i in range(0, len(histoList)):
       topScore=0
@@ -36,7 +36,9 @@ def predict(tokenChoices, token, predictUpToPosition):
   while len(token) > 0: #TODO Make the steps configurable
     choice=""
     for p in range(0, predictUpToPosition + 1):
-      choice += tokenChoices.get_choice(token, p)
+      currentChoice = tokenChoices.get_choice(token, p)
+      if currentChoice != None:
+        choice += currentChoice
     if choice != "":
       return choice
     token=token[1:len(token)] # Optimistic flow of evaluation of the prompt from its entirety down to the last character.

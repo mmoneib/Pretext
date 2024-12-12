@@ -24,7 +24,7 @@ root (script, license, readme)
 
 ## Run
 python pretext.py --knowledge-files list_of_files_here
-### Example: _python pretext.py --knowledge-files pretext/pretext.py pretext/actions/token.py_
+### Example: _python pretext.py --knowledge-files pretext.py pretext/actions/token.py_
 
 ## Test
 Running all tests: _python -m unittest discover tests_
