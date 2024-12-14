@@ -1,4 +1,4 @@
-from ..actions import files as FilesActions
+from ..actions import file as FilesActions
 
 class ReadingYieldingProcess:
 
@@ -7,4 +7,4 @@ class ReadingYieldingProcess:
 
   def process(self):
     for fileName in self.fileNames:
-      yield FilesActions.openTextFileAsReadOnly(fileName)
+      yield FilesActions.read_text_file(fileName)

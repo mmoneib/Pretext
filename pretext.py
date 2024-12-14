@@ -1,8 +1,6 @@
 #!/usr/bin/python
 import argparse
 import pretext
-from pretext.actions import text as TextActions
-from pretext.actions import token as TokenActions
 from pretext.process.reading import ReadingYieldingProcess
 from pretext.process.tokenization import TokenizationParallel
 from pretext.process.modeling import ModelingParallel
