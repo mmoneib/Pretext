@@ -7,7 +7,7 @@ class TokenizationParallel:
     self.charsTokenizationSteps=configuration.charsTokenizationSteps
     self.wordsTokenizationSteps=configuration.wordsTokenizationSteps
     self.numberOfTokenizationThreads=configuration.numberOfTokenizationThreads
-    self.isBlocking = True
+    self.isBlocking = True # Should be allowed to be false if partial outputs are to be tolerated. (Un)blocking mechanism is necessary for parallel computations.
     self.text = text
 
   def process(self):
@@ -30,7 +30,7 @@ class TokenizationParallel:
 
   def __output_complete(self): # Busy waiting until output is available.
     while self.isComplete == False:
-      time.sleep(1)  
+      time.sleep(1)  #TODO Make it configurable.
     return self.tokens
 
   def __output_maybe_incomplete(self): # Unguaranteed ouptut in case of multi-threads.
