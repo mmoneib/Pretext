@@ -3,11 +3,11 @@ class Configuration:
 
   def __init__(self, args):
     # Defaults
-    self.charsTokenizationSteps = 1
+    self.charsTokenizationSteps = [1]
     self.infinitePrompting=False
     self.numberOfTokenizationThreads=1
     self.predictUptoPosition=0
-    self.wordsTokenizationSteps = 1
+    self.wordsTokenizationSteps = []
     # Overrides (by command-line parameters)
     if args is not None:
       self.infinitePrompting=args.infinite_prompting

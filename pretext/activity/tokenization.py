@@ -12,15 +12,15 @@ class Tokenization_ParallelActivity:
 
   def act(self):
     self.tokens=[]
-    if self.charsTokenizationSteps > 0:
-      for i in range(0, self.charsTokenizationSteps):
+    if len(self.charsTokenizationSteps) > 0:
+      for i in range(0, len(self.charsTokenizationSteps)):
         self.tokens.extend(TextActions.tokenize_by_chars(self.text, i+1))
-    if self.wordsTokenizationSteps > 0:
-      for i in range(0, self.wordsTokenizationSteps):
+    if len(self.wordsTokenizationSteps) > 0:
+      for i in range(0, len(self.wordsTokenizationSteps)):
         self.tokens.extend(TextActions.tokenize_by_words(self.text, i+1))
     self.isComplete = True
     #print(self.tokens)
-    return self # For chaining.
+    return self # For chaining with output.
 
   def output(self):
     if self.isBlocking:
