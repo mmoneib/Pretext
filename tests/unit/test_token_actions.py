@@ -1,8 +1,8 @@
 #!/usr/bin/python
 import unittest
 from pretext.actions import token
-from pretext.model.token_graph import TokenGraph
-from pretext.model.token_choices import TokenChoices
+from pretext.archetype.token_graph import TokenGraph
+from pretext.archetype.token_choices import TokenChoices
 
 class TestTokenActions(unittest.TestCase):
 
@@ -10,7 +10,7 @@ class TestTokenActions(unittest.TestCase):
     tokens = ["T", "o", "k", "e", "n", "i", "z", "a", "t", "i", "o", "n"]
     tokenGraph = TokenGraph()
     tokenGraph = token.model_by_next(1, tokens, tokenGraph)
-    # Expected results are lists of lists as to allow for a model where neighborhood is defined by more than one step (modelling by more than 1 next).
+    # Expected results are lists of lists as to allow for a model where neighborhood is defined by more than one step modeling by more than 1 next).
     self.assertEqual(tokenGraph.get_links("T"), [["o"]])
     self.assertEqual(tokenGraph.get_links("o"), [["k"],["n"]])
     self.assertEqual(tokenGraph.get_links("k"), [["e"]])

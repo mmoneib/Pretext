@@ -1,14 +1,14 @@
 from ..actions import token as TokenActions
 import time
 
-class ModelingParallel:
+class Modeling_ParallelActivity:
 
   def __init__(self, tokens, tokenGraph):
     self.tokens = tokens
     self.tokenGraph = tokenGraph
     self.isBlocking = True
 
-  def process(self):
+  def act(self):
     self.tokenGraph = TokenActions.model_by_next(1, self.tokens, self.tokenGraph)
     self.isComplete = True
     return self # For chaining.

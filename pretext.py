@@ -1,22 +1,22 @@
 #!/usr/bin/python
 import argparse
 import pretext
-from pretext.process.reading import ReadingYieldingProcess
-from pretext.process.tokenization import TokenizationParallel
-from pretext.process.modeling import ModelingParallel
-from pretext.process.statistics import StatisticsProcedural
-from pretext.process.writing import WritingProcedural
-from pretext.model.configuration import Configuration
-from pretext.model.token_graph import TokenGraph
+from pretext.activity.reading import Reading_YieldingActivity
+from pretext.activity.tokenization import Tokenization_ParallelActivity
+from pretext.activity.modeling import Modeling_ParallelActivity
+from pretext.activity.statistics import Statistics_ProceduralActivity
+from pretext.activity.writing import WritingProcedural
+from pretext.archetype.configuration import Configuration
+from pretext.archetype.token_graph import TokenGraph
 
 #TODO Check feasibility of tokenization by keywords.
-#TODO Persist the models.
-#TODO Make process modules into classes of input, process, and output workflow.
+#TODO Persist the.archetype..
+#TODO Make activity modules into classes of input, activity, and output workflow.
 #TODO Add logging.
 #TODO Add header comments to functions.
 #TODO Parse input directories.
 #TODO Use tokenization steps as an input parameter.
-#TODO Add multithreading to TokenizationParallel and ModelingParallel.
+#TODO Add multithreading to Tokenization_ParallelActivity and Modeling_ParallelActivity.
 #TODO Should we tokenize starting from every unit of text? or just from the end of the last token?
 #TODO What would bring the generation to a closure?
 #TODO Make all config parameters available in the command line.
@@ -32,18 +32,18 @@ if __name__=="__main__":
   args = parser.parse_args()
   config=Configuration(args)
   tokenGraph=TokenGraph()
-  for text in ReadingYieldingProcess(args.knowledge_files).process():
-    tokenizationParallel = TokenizationParallel(config, text)
-    tokenizationParallel.process()
+  for text in Reading_YieldingActivity(args.knowledge_files).act():
+    tokenizationParallel = Tokenization_ParallelActivity(config, text)
+    tokenizationParallel.act()
     tokens=tokenizationParallel.output()
     print("Tokens: ", tokens)
-    modelingParallel = ModelingParallel(tokens, tokenGraph)
-    modelingParallel.process()
+    modelingParallel = Modeling_ParallelActivity(tokens, tokenGraph)
+    modelingParallel.act()
     tokenGraph = modelingParallel.output()
   print(tokenGraph.get_graph())
-  statisticsProcedural = StatisticsProcedural(tokenGraph)
-  statisticsProcedural.process()
+  statisticsProcedural = Statistics_ProceduralActivity(tokenGraph)
+  statisticsProcedural.act()
   tokenChoices = statisticsProcedural.output()
   print("Report:\n" , tokenChoices.get_choices())
   writingProcedural = WritingProcedural(tokenChoices, config)
-  writingProcedural.process()
+  writingProcedural.act()

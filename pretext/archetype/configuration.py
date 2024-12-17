@@ -8,10 +8,10 @@ class Configuration:
     self.numberOfTokenizationThreads=1
     self.predictUptoPosition=0
     self.wordsTokenizationSteps = 1
-    # Overrides
+    # Overrides (by command-line parameters)
     if args is not None:
       self.infinitePrompting=args.infinite_prompting
-      if self.charsTokenizationSteps is not None:
-        self.charsTokenizationSteps=args.chars_tokenization_steps
-      if self.wordsTokenizationSteps is not None:
+      if args.chars_tokenization_steps is not None:
+        self.charsTokenizationSteps = args.chars_tokenization_steps
+      if args.words_tokenization_steps is not None:
         self.wordsTokenizationSteps=args.words_tokenization_steps

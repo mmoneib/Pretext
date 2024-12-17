@@ -1,7 +1,7 @@
 # Relative imports are to allow importing from the tests package.
-from ..model.token_graph import TokenGraph
-from ..model.token_scores import TokenScores
-from ..model.token_choices import TokenChoices
+from ..archetype.token_graph import TokenGraph
+from ..archetype.token_scores import TokenScores
+from ..archetype.token_choices import TokenChoices
 
 def model_by_next(numOfNextTokens, tokens, tokenGraph):
   for i in range(0, len(tokens)-1):

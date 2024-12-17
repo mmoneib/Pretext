@@ -1,7 +1,7 @@
 from ..actions import text as TextActions
 import time
 
-class TokenizationParallel:
+class Tokenization_ParallelActivity:
 
   def __init__(self, configuration, text):
     self.charsTokenizationSteps=configuration.charsTokenizationSteps
@@ -10,7 +10,7 @@ class TokenizationParallel:
     self.isBlocking = True # Should be allowed to be false if partial outputs are to be tolerated. (Un)blocking mechanism is necessary for parallel computations.
     self.text = text
 
-  def process(self):
+  def act(self):
     self.tokens=[]
     if self.charsTokenizationSteps > 0:
       for i in range(0, self.charsTokenizationSteps):

@@ -7,7 +7,7 @@ class WritingProcedural:
     self.predictUptoPosition = config.predictUptoPosition
     self.infinitePrompting = config.infinitePrompting
 
-  def process(self):
+  def act(self):
     self.__write_with_prompt()
     return self
 
