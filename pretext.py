@@ -21,7 +21,7 @@ from pretext.archetype.token_graph import TokenGraph
 #TODO What would bring the generation to a closure?
 #TODO Make all config parameters available in the command line.
 #TODO Add integration tests.
-#TODO Update structure of tests directory.
+#TODO Ability to mix threading with multiprocesses.
 
 if __name__=="__main__":
   parser = argparse.ArgumentParser(description="Pretext predicts text based on input document(s) (scope of knowledge), statistical formula (method of analysis), and a trigger text for the output along with its size (destiny).")

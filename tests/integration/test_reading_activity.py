@@ -2,7 +2,7 @@
 import unittest
 from pretext.activity.reading import Reading_YieldingActivity
 
-class TestReadingProcess(unittest.TestCase):
+class TestReadingActivity(unittest.TestCase):
 
   def test_reading_prcoess_single_file(self):
     fileName = ["tests/resources/test_multi_line.txt"]
