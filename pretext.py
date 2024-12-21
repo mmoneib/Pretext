@@ -10,18 +10,17 @@ from pretext.archetype.configuration import Configuration
 from pretext.archetype.token_graph import TokenGraph
 
 #TODO Check feasibility of tokenization by keywords.
-#TODO Persist the.archetype..
-#TODO Make activity modules into classes of input, activity, and output workflow.
+#TODO Persist the archetype.
 #TODO Add logging.
 #TODO Add header comments to functions.
 #TODO Parse input directories.
-#TODO Use tokenization steps as an input parameter.
 #TODO Add multithreading to Tokenization_ParallelActivity and Modeling_ParallelActivity.
 #TODO Should we tokenize starting from every unit of text? or just from the end of the last token?
 #TODO What would bring the generation to a closure?
 #TODO Make all config parameters available in the command line.
 #TODO Add integration tests.
 #TODO Ability to mix threading with multiprocesses.
+#TODO Add more tests for asynchronous execution of tokenization tasks.
 
 if __name__=="__main__":
   parser = argparse.ArgumentParser(description="Pretext predicts text based on input document(s) (scope of knowledge), statistical formula (method of analysis), and a trigger text for the output along with its size (destiny).")

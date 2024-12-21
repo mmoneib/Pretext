@@ -22,16 +22,21 @@ class Tokenization_ParallelActivity:
     #print(self.tokens)
     return self # For chaining with output.
 
-  def output(self):
+  def output(self, sleepBeforeFirstAttemptInSeconds=None, sleepAfterFirstAttemptInSeconds=1):
+    if sleepBeforeFirstAttemptInSeconds is not None:
+      time.sleep(sleepBeforeFirstAttemptInSeconds) # Useful for asynchronous calls outside the main thread.
     if self.isBlocking:
-      return self.__output_complete()
+      return self.__output_complete(sleepAfterFirstAttemptInSeconds)
     else:
       return self.__output_maybe_incomplete()
 
-  def __output_complete(self): # Busy waiting until output is available.
+  def __output_complete(self, sleepAfterFirstAttemptInSeconds): # Busy waiting until output is available.
     while self.isComplete == False:
-      time.sleep(1)  #TODO Make it configurable.
+      time.sleep(sleepAfterFirstAttemptInSeconds)
     return self.tokens
 
   def __output_maybe_incomplete(self): # Unguaranteed ouptut in case of multi-threads.
     return self.tokens
+
+def get_task_output(task): # Required as a global because map(...) of ProcessPoolExecutor doesn't accept local functions (like lambda).
+  return task.act().output()
