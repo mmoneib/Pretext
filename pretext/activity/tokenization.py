@@ -9,8 +9,10 @@ class Tokenization_ParallelActivity:
     self.numberOfTokenizationThreads=configuration.numberOfTokenizationThreads
     self.isBlocking = True # Should be allowed to be false if partial outputs are to be tolerated. (Un)blocking mechanism is necessary for parallel computations.
     self.text = text
+    self.isComplete = False
 
   def act(self):
+    self.isComplete = True
     self.tokens=[]
     if len(self.charsTokenizationSteps) > 0:
       for i in range(0, len(self.charsTokenizationSteps)):

@@ -65,29 +65,49 @@ class TestTokenizationActivity(unittest.TestCase):
     self.assertEqual(qu.get(), ["Q","W","E","R","QW","ER","QWER","QWER"])
 
   def test_tokenization_activity_parallel_using_futures_thread_pool_executor(self):
-    executor = concurrent.futures.ThreadPoolExecutor(max_workers=2)
-    self._run_2_tokenization_tasks_in_parallel_with_executor(executor)
+    chosenExecutor = concurrent.futures.ThreadPoolExecutor(max_workers=2)
+    self._run_2_tokenization_tasks_in_parallel_with_executor(chosenExecutor)
  
   def test_tokenization_activity_parallel_using_futures_process_pool_executor(self):
-    executor = concurrent.futures.ProcessPoolExecutor(max_workers=2)
-    self._run_2_tokenization_tasks_in_parallel_with_executor(executor)
+    chosenExecutor = concurrent.futures.ProcessPoolExecutor(max_workers=2)
+    self._run_2_tokenization_tasks_in_parallel_with_executor(chosenExecutor)
 
   def test_tokenization_activity_parallel_using_multiprocessing_pool_executor(self):
-    executor = multiprocessing.Pool(processes=2)
-    self._run_2_tokenization_tasks_in_parallel_with_executor(executor)
+    chosenExecutor = multiprocessing.Pool(processes=2)
+    self._run_2_tokenization_tasks_in_parallel_with_executor(chosenExecutor)
+
+  def test_tokenization_activity_parallel_using_multiprocessing_pool_executor_async(self):
+    chosenExecutor = concurrent.futures.ProcessPoolExecutor(max_workers=2)
+    self._run_2_tokenization_tasks_in_parallel_with_executor_async(chosenExecutor)
 
   ## A generic function to define the worker and initiate the tasks for threads and processes testing using an executor. 
-  def _run_2_tokenization_tasks_in_parallel_with_executor(self, executor):
+  def _run_2_tokenization_tasks_in_parallel_with_executor(self, chosenExecutor):
     config = Configuration(None) # None will use defaults.	
     config.charsTokenizationSteps = [1,2]
     config.wordsTokenizationSteps = [1,2]
     activities = []
     activities.append(Tokenization_ParallelActivity(config, "ABCD"))
     activities.append(Tokenization_ParallelActivity(config, "QWER"))
-    with executor as executor:
+    with chosenExecutor as executor:
       # list(...) to cast from iterable, map(...) for ordered executions. Otherwise, submit(...).
       # lambda could be used instead of named function for threads. For processes, however, it fails being local to a class.
+      output = list(executor.map(tokenization.get_task_output, activities))
       output = list(executor.map(tokenization.get_task_output, activities))
     self.assertEqual(output[0], ["A","B","C","D","AB","CD","ABCD","ABCD"])
     self.assertEqual(output[1], ["Q","W","E","R","QW","ER","QWER","QWER"])
 
+  def _run_2_tokenization_tasks_in_parallel_with_executor_async(self, chosenExecutor):
+    config = Configuration(None) # None will use defaults.	
+    config.charsTokenizationSteps = [1,2]
+    config.wordsTokenizationSteps = [1,2]
+    activities = []
+    activities.append(Tokenization_ParallelActivity(config, "ABCD"))
+    activities.append(Tokenization_ParallelActivity(config, "QWER"))
+    with chosenExecutor as executor:
+      # list(...) to cast from iterable, map(...) for ordered executions. Otherwise, submit(...).
+      # lambda could be used instead of named function for threads. For processes, however, it fails being local to a class.
+      future1 = executor.submit(tokenization.get_task_output, activities[0])
+      future2 = executor.submit(tokenization.get_task_output, activities[1])
+      output = [future1.result(timeout=2), future2.result(timeout=2)]
+    self.assertEqual(output[0], ["A","B","C","D","AB","CD","ABCD","ABCD"])
+    self.assertEqual(output[1], ["Q","W","E","R","QW","ER","QWER","QWER"])
