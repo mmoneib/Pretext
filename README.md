@@ -36,5 +36,5 @@ python pretext.py --knowledge-files list_of_files_here
 Running all tests: _python -m unittest discover tests_
 
 Running a specific test component: _python -m unittest test_module_qulaified_path_here_
-### Example: _python -m unittest tests.test_text_actions_
-### Example: _python -m unittest tests.test_text_actions.TestTokenActions.test_tokenize_by_words_3_
+### Example: _python -m unittest tests.unit.test_text_actions_
+### Example: _python -m unittest tests.unit.test_text_actions.TestTokenActions.test_tokenize_by_words_3_

@@ -15,11 +15,13 @@ class TestTextActions(unittest.TestCase):
     self.assertEqual(TextActions.tokenize_by_words("Apple banana cucumber donuts.", 1), ["Apple", " banana", " cucumber", " donuts."])
     self.assertEqual(TextActions.tokenize_by_words("Apple banana cucumber.", 1), ["Apple", " banana", " cucumber."])
     self.assertEqual(TextActions.tokenize_by_words("Apple banana cucumber donuts. Eggs.", 1), ["Apple", " banana", " cucumber", " donuts.", " Eggs."])
+    self.assertEqual(TextActions.tokenize_by_words("Apple.", 1), ["Apple."])
 
   def test_tokenize_by_words_2(self):
     self.assertEqual(TextActions.tokenize_by_words("Apple banana cucumber donuts.", 2), ["Apple banana", " cucumber donuts."])
     self.assertEqual(TextActions.tokenize_by_words("Apple banana cucumber.", 2), ["Apple banana", " cucumber."])
     self.assertEqual(TextActions.tokenize_by_words("Apple banana cucumber donuts. Eggs.", 2), ["Apple banana", " cucumber donuts.", " Eggs."])
+    self.assertEqual(TextActions.tokenize_by_words("Apple.", 2), ["Apple."])
 
   def test_tokenize_by_words_3(self):
     self.assertEqual(TextActions.tokenize_by_words("Apple banana cucumber donuts.", 3), ["Apple banana cucumber", " donuts."])

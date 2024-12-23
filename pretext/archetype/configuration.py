@@ -7,6 +7,7 @@ class Configuration:
     self.infinitePrompting=False
     self.numberOfTokenizationThreads=1
     self.predictUptoPosition=0
+    self.tokenizationSeparator="" # Specific to Tokenization as it might not be suitable for other activites.
     self.wordsTokenizationSteps = []
     # Overrides (by command-line parameters)
     if args is not None:

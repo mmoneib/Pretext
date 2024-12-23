@@ -3,8 +3,15 @@ from ..archetype.token_graph import TokenGraph
 from ..archetype.token_scores import TokenScores
 from ..archetype.token_choices import TokenChoices
 
-def model_by_next(numOfNextTokens, tokens, tokenGraph):
+# Add separator to avoid mixing between tokens of different granularities when modeling.
+def append_tokenization_separator(tokens, separator): #TODO Should this be embedded in tokenization itself? I think so.
+  tokens.append(separator)
+  return tokens
+
+def model_by_next(numOfNextTokens, tokens, tokenGraph, separator):
   for i in range(0, len(tokens)-1):
+     if tokens[i] == separator: # Could have been removed by another action, but better be embeedded as it has no use.
+       continue
      # Python gracefully doesn't throw errors when slicing out of bounds.
      tokenGraph.link(tokens[i], tokens[i+1:i+numOfNextTokens+1])
   return tokenGraph

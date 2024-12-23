@@ -20,7 +20,8 @@ from pretext.archetype.token_graph import TokenGraph
 #TODO Make all config parameters available in the command line.
 #TODO Add integration tests.
 #TODO Ability to mix threading with multiprocesses.
-#TODO Add more tests for asynchronous execution of tokenization tasks.
+#TODO Sepaarate tokenization into more granular activities, so that it doesn't have to be one activity per text (file).
+#TODO Remove redundancy of 'output' functions from activities. Use inheritemce?
 
 if __name__=="__main__":
   parser = argparse.ArgumentParser(description="Pretext predicts text based on input document(s) (scope of knowledge), statistical formula (method of analysis), and a trigger text for the output along with its size (destiny).")

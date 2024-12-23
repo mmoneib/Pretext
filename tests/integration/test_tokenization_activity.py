@@ -9,7 +9,13 @@ from pretext.activity.tokenization import Tokenization_ParallelActivity
 from pretext.archetype.configuration import Configuration
 
 class TestTokenizationActivity(unittest.TestCase):
-
+  # Same inputs conceptually because we are testing integration of tasks rather than the tokenizaiton action itself.
+  input1 = "ABCD"
+  input2 = "QWER"
+  #TODO Are the repitition in the last 4 tokens problematic?
+  expectedOutput1 = ["A","B","C","D","","AB","CD","","ABCD","","ABCD",""]
+  expectedOutput2 = ["Q","W","E","R","","QW","ER","","QWER","","QWER",""]
+    
   ## Tests tokenization using 2 threads run in a bare bone way without a queue, taking advantage of the shared memory space with the main thread.
   def test_tokenization_activity_parallel_using_threading_without_queue(self):
     config = Configuration(None) # None will use defaults.
@@ -17,8 +23,8 @@ class TestTokenizationActivity(unittest.TestCase):
     config.charsTokenizationSteps = [1,2]
     config.wordsTokenizationSteps = [1,2]
     # Create instances.
-    tokenization1 = Tokenization_ParallelActivity(config, "ABCD")
-    tokenization2 = Tokenization_ParallelActivity(config, "QWER")
+    tokenization1 = Tokenization_ParallelActivity(config, self.input1)
+    tokenization2 = Tokenization_ParallelActivity(config, self.input2)
     # Create processes.
     tokenizationTask1 = threading.Thread(target=tokenization1.act)
     tokenizationTask2 = threading.Thread(target=tokenization2.act)
@@ -29,8 +35,8 @@ class TestTokenizationActivity(unittest.TestCase):
     tokenizationTask1.join()
     tokenizationTask2.join()
     # Retrieve the output from the instances. This is possible without affecting the parallelization because ouptut() is separated from act().
-    self.assertEqual(tokenization1.output(), ["A","B","C","D","AB","CD","ABCD","ABCD"])
-    self.assertEqual(tokenization2.output(), ["Q","W","E","R","QW","ER","QWER","QWER"])
+    self.assertEqual(tokenization1.output(), self.expectedOutput1)
+    self.assertEqual(tokenization2.output(), self.expectedOutput2)
     
   ## Tests tokenization running 2 threads in paralllel and retrieve the results using a worker queue.
   def test_tokenization_activity_parallel_using_multiprocessing_with_queue(self):
@@ -52,8 +58,8 @@ class TestTokenizationActivity(unittest.TestCase):
       instance = Tokenization_ParallelActivity(config, text)
       qu.put(instance.act().output()) # Chain of commands.
     # Create processes.
-    tokenizationTask1 = parallelizationClass(target=worker, args=(1, qu, "ABCD"))
-    tokenizationTask2 = parallelizationClass(target=worker, args=(2, qu, "QWER"))
+    tokenizationTask1 = parallelizationClass(target=worker, args=(1, queue, self.input1))
+    tokenizationTask2 = parallelizationClass(target=worker, args=(2, queue, self.input2))
     # Start threads.
     tokenizationTask1.start()
     tokenizationTask2.start()
@@ -61,8 +67,8 @@ class TestTokenizationActivity(unittest.TestCase):
     tokenizationTask1.join()
     tokenizationTask2.join()
     # Retrieve the output from the instances. This is possible without affecting the parallelization because ouptut() is separated from act().
-    self.assertEqual(qu.get(), ["A","B","C","D","AB","CD","ABCD","ABCD"])
-    self.assertEqual(qu.get(), ["Q","W","E","R","QW","ER","QWER","QWER"])
+    self.assertEqual(queue.get(), self.expectedOutput1)
+    self.assertEqual(queue.get(), self.expectedOutput2)
 
   def test_tokenization_activity_parallel_using_futures_thread_pool_executor(self):
     chosenExecutor = concurrent.futures.ThreadPoolExecutor(max_workers=2)
@@ -86,8 +92,8 @@ class TestTokenizationActivity(unittest.TestCase):
     config.charsTokenizationSteps = [1,2]
     config.wordsTokenizationSteps = [1,2]
     activities = []
-    activities.append(Tokenization_ParallelActivity(config, "ABCD"))
-    activities.append(Tokenization_ParallelActivity(config, "QWER"))
+    activities.append(Tokenization_ParallelActivity(config, self.input1))
+    activities.append(Tokenization_ParallelActivity(config, self.input2))
     with chosenExecutor as executor:
       if isSync:
         # list(...) to cast from iterable. Using map(...) for synchronous, ordered executions, returns an iterable including all outputs. The called control the timing and the caller blocks.
@@ -99,6 +105,6 @@ class TestTokenizationActivity(unittest.TestCase):
         future1 = executor.submit(tokenization.get_task_output, activities[0])
         future2 = executor.submit(tokenization.get_task_output, activities[1])
         output = [future1.result(timeout=2), future2.result(timeout=2)]
-    self.assertEqual(output[0], ["A","B","C","D","AB","CD","ABCD","ABCD"])
-    self.assertEqual(output[1], ["Q","W","E","R","QW","ER","QWER","QWER"])
+    self.assertEqual(output[0], self.expectedOutput1)
+    self.assertEqual(output[1], self.expectedOutput2)
 

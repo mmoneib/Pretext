@@ -1,4 +1,5 @@
 from ..actions import text as TextActions
+from ..actions import token as TokenActions
 import time
 
 class Tokenization_ParallelActivity:
@@ -6,6 +7,7 @@ class Tokenization_ParallelActivity:
   def __init__(self, configuration, text):
     self.charsTokenizationSteps=configuration.charsTokenizationSteps
     self.wordsTokenizationSteps=configuration.wordsTokenizationSteps
+    self.tokenizationSeparator=configuration.tokenizationSeparator
     self.numberOfTokenizationThreads=configuration.numberOfTokenizationThreads
     self.isBlocking = True # Should be allowed to be false if partial outputs are to be tolerated. (Un)blocking mechanism is necessary for parallel computations.
     self.text = text
@@ -17,9 +19,11 @@ class Tokenization_ParallelActivity:
     if len(self.charsTokenizationSteps) > 0:
       for i in range(0, len(self.charsTokenizationSteps)):
         self.tokens.extend(TextActions.tokenize_by_chars(self.text, i+1))
+        TokenActions.append_tokenization_separator(self.tokens, self.tokenizationSeparator)
     if len(self.wordsTokenizationSteps) > 0:
       for i in range(0, len(self.wordsTokenizationSteps)):
         self.tokens.extend(TextActions.tokenize_by_words(self.text, i+1))
+        TokenActions.append_tokenization_separator(self.tokens, self.tokenizationSeparator)
     self.isComplete = True
     #print(self.tokens)
     return self # For chaining with output.

@@ -5,31 +5,49 @@ from pretext.archetype.token_graph import TokenGraph
 from pretext.archetype.token_choices import TokenChoices
 
 class TestTokenActions(unittest.TestCase):
+  tokenizationSeparator = "" # As a variablt to elemenate redundancy and give context.
+
+  def test_append_tokenization_separator(self):
+    tokens = ["A", "B", "C"]
+    tokens = token.append_tokenization_separator(tokens, self.tokenizationSeparator)
+    tokens.extend(["AB", "C"])
+    tokens = token.append_tokenization_separator(tokens, self.tokenizationSeparator)
+    self.assertEqual(tokens, ["A", "B", "C", "", "AB", "C", self.tokenizationSeparator])
 
   def test_model_by_next_1_called_once(self):
-    tokens = ["T", "o", "k", "e", "n", "i", "z", "a", "t", "i", "o", "n"]
+    tokens = ["T", "o", "k", "e", "n", "i", "z", "a", "t", "i", "o", "n", self.tokenizationSeparator]
     tokenGraph = TokenGraph()
-    tokenGraph = token.model_by_next(1, tokens, tokenGraph)
+    tokenGraph = token.model_by_next(1, tokens, tokenGraph, self.tokenizationSeparator)
     # Expected results are lists of lists as to allow for a model where neighborhood is defined by more than one step modeling by more than 1 next).
     self.assertEqual(tokenGraph.get_links("T"), [["o"]])
     self.assertEqual(tokenGraph.get_links("o"), [["k"],["n"]])
     self.assertEqual(tokenGraph.get_links("k"), [["e"]])
-    self.assertEqual(tokenGraph.get_links("n"), [["i"]])
+    self.assertEqual(tokenGraph.get_links("n"), [["i"],[self.tokenizationSeparator]])
     self.assertEqual(tokenGraph.get_links("i"), [["z"],["o"]])
     self.assertEqual(tokenGraph.get_links("z"), [["a"]])
     self.assertEqual(tokenGraph.get_links("a"), [["t"]])
     self.assertEqual(tokenGraph.get_links("t"), [["i"]])
     self.assertEqual(tokenGraph.get_links("i"), [["z"],["o"]])
-    self.assertEqual(tokenGraph.get_links("n"), [["i"]])
+    self.assertEqual(tokenGraph.get_links("n"), [["i"],[self.tokenizationSeparator]]) # Include "" as separator.
+    # Last element should have no entry.
+    self.assertEqual(tokenGraph.get_links(self.tokenizationSeparator), [])
     # Python doesn't create a list if nothing is found during slicing, which is exactly what we need.
     self.assertEqual(tokenGraph.get_links("x"), [])
+
+  def test_model_by_next_1_with_separator(self):
+    tokens = ["A", "B", "C", self.tokenizationSeparator, "AB", "C", self.tokenizationSeparator]
+    tokenGraph = TokenGraph()
+    tokenGraph = token.model_by_next(1, tokens, tokenGraph, self.tokenizationSeparator)
+    self.assertEqual(tokenGraph.get_links("C"), [[self.tokenizationSeparator], [self.tokenizationSeparator]])
+    # Separator should have no links.
+    self.assertEqual(tokenGraph.get_links(self.tokenizationSeparator), [])
     
   def test_model_by_next_1_called_multiple(self):
     # Seemingle redundant links are relevant for statistical analysis; hence, no check for uniqueness when linking.
     tokens = ["1", "2", "3", "2", "1"]
     tokenGraph = TokenGraph()
-    tokenGraph = token.model_by_next(1, tokens, tokenGraph)
-    tokenGraph = token.model_by_next(1, tokens, tokenGraph)
+    tokenGraph = token.model_by_next(1, tokens, tokenGraph, self.tokenizationSeparator)
+    tokenGraph = token.model_by_next(1, tokens, tokenGraph, self.tokenizationSeparator)
     self.assertEqual(tokenGraph.get_links("1"), [["2"], ["2"]])
     self.assertEqual(tokenGraph.get_links("2"), [["3"], ["1"], ["3"], ["1"]])
     self.assertEqual(tokenGraph.get_links("3"), [["2"], ["2"]])
@@ -38,7 +56,7 @@ class TestTokenActions(unittest.TestCase):
     # Expected to have links of 3, 2, and 1 step.
     tokens = ["A", "B", "C", "D"]
     tokenGraph = TokenGraph()
-    tokenGraph = token.model_by_next(3, tokens, tokenGraph)
+    tokenGraph = token.model_by_next(3, tokens, tokenGraph, self.tokenizationSeparator)
     self.assertEqual(tokenGraph.get_links("A"), [["B", "C", "D"]])
     self.assertEqual(tokenGraph.get_links("B"), [["C", "D"]])
     self.assertEqual(tokenGraph.get_links("C"), [["D"]])
@@ -48,8 +66,8 @@ class TestTokenActions(unittest.TestCase):
     # Expected to have links of 3, 2, and 1 step.
     tokens = ["A", "B", "C", "D"]
     tokenGraph = TokenGraph()
-    tokenGraph = token.model_by_next(3, tokens, tokenGraph)
-    tokenGraph = token.model_by_next(3, tokens, tokenGraph)
+    tokenGraph = token.model_by_next(3, tokens, tokenGraph, self.tokenizationSeparator)
+    tokenGraph = token.model_by_next(3, tokens, tokenGraph, self.tokenizationSeparator)
     self.assertEqual(tokenGraph.get_links("A"), [["B", "C", "D"], ["B", "C", "D"]])
     self.assertEqual(tokenGraph.get_links("B"), [["C", "D"], ["C", "D"]])
     self.assertEqual(tokenGraph.get_links("C"), [["D"], ["D"]])
