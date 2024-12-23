@@ -7,6 +7,7 @@ from pretext.activity.modeling import Modeling_ParallelActivity
 from pretext.archetype.configuration import Configuration
 from pretext.archetype.token_graph import TokenGraph
 
+# For more tests of parallelization flavoes, see TestTokenizationActivity
 class TestModelingActivity(unittest.TestCase):
     
   ## Tests modeling running 2 threads in paralllel and retrieve the results using a worker queue.

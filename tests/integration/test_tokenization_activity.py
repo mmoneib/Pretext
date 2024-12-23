@@ -12,7 +12,7 @@ class TestTokenizationActivity(unittest.TestCase):
   # Same inputs conceptually because we are testing integration of tasks rather than the tokenizaiton action itself.
   input1 = "ABCD"
   input2 = "QWER"
-  #TODO Are the repitition in the last 4 tokens problematic?
+  #TODO Are the repitition in the last 4 tokens problematic? One is 1 word tokenization and the other is for 2 words.
   expectedOutput1 = ["A","B","C","D","","AB","CD","","ABCD","","ABCD",""]
   expectedOutput2 = ["Q","W","E","R","","QW","ER","","QWER","","QWER",""]
     
@@ -47,19 +47,19 @@ class TestTokenizationActivity(unittest.TestCase):
     self._run_2_tokenization_tasks_in_parallel_with_worker_queue(threading.Thread, queue.Queue()) 
 
   ## A generic function to define the worker and initiate the tasks for threads and processes testing using a worker queue. A proof that the application can be configured to run either using threads or processes. When choosing, threading is good for tasks of long waiting time that the overall runtime would benefit from context switching; while processess provide better performance for concurrent tasks if the separate memory spaces overhead is not an issue.
-  def _run_2_tokenization_tasks_in_parallel_with_worker_queue(self, parallelizationClass, qu):
+  def _run_2_tokenization_tasks_in_parallel_with_worker_queue(self, parallelizationClass, qu): # Not 'queue' as it is a module's name.
     # Use configuration defaults.
     config = Configuration(None) # None will use defaults.
     # Override configuration defaults.
     config.charsTokenizationSteps = [1,2]
     config.wordsTokenizationSteps = [1,2]
     # Define worker.
-    def worker(self, qu, text): # Not using 'queue' to emphasize the different context.
+    def worker(self, q, text): # Not using 'qu' to emphasize the different context.
       instance = Tokenization_ParallelActivity(config, text)
-      qu.put(instance.act().output()) # Chain of commands.
+      q.put(instance.act().output()) # Chain of commands.
     # Create processes.
-    tokenizationTask1 = parallelizationClass(target=worker, args=(1, queue, self.input1))
-    tokenizationTask2 = parallelizationClass(target=worker, args=(2, queue, self.input2))
+    tokenizationTask1 = parallelizationClass(target=worker, args=(1, qu, self.input1))
+    tokenizationTask2 = parallelizationClass(target=worker, args=(2, qu, self.input2))
     # Start threads.
     tokenizationTask1.start()
     tokenizationTask2.start()
@@ -67,8 +67,8 @@ class TestTokenizationActivity(unittest.TestCase):
     tokenizationTask1.join()
     tokenizationTask2.join()
     # Retrieve the output from the instances. This is possible without affecting the parallelization because ouptut() is separated from act().
-    self.assertEqual(queue.get(), self.expectedOutput1)
-    self.assertEqual(queue.get(), self.expectedOutput2)
+    self.assertEqual(qu.get(), self.expectedOutput1)
+    self.assertEqual(qu.get(), self.expectedOutput2)
 
   def test_tokenization_activity_parallel_using_futures_thread_pool_executor(self):
     chosenExecutor = concurrent.futures.ThreadPoolExecutor(max_workers=2)
