@@ -5,7 +5,7 @@ from pretext.activity.reading import Reading_YieldingActivity
 from pretext.activity.tokenization import Tokenization_ParallelActivity
 from pretext.activity.modeling import Modeling_ParallelActivity
 from pretext.activity.statistics import Statistics_ProceduralActivity
-from pretext.activity.writing import WritingProcedural
+from pretext.activity.writing import Writing_InteractiveActivity
 from pretext.archetype.configuration import Configuration
 from pretext.archetype.token_graph import TokenGraph
 
@@ -37,7 +37,7 @@ if __name__=="__main__":
     tokenizationParallel.act()
     tokens=tokenizationParallel.output()
     print("Tokens: ", tokens)
-    modelingParallel = Modeling_ParallelActivity(tokens, tokenGraph)
+    modelingParallel = Modeling_ParallelActivity(config, tokens, tokenGraph)
     modelingParallel.act()
     tokenGraph = modelingParallel.output()
   print(tokenGraph.get_graph())
@@ -45,5 +45,5 @@ if __name__=="__main__":
   statisticsProcedural.act()
   tokenChoices = statisticsProcedural.output()
   print("Report:\n" , tokenChoices.get_choices())
-  writingProcedural = WritingProcedural(tokenChoices, config)
-  writingProcedural.act()
+  writingInteractive = Writing_InteractiveActivity(config, tokenChoices)
+  writingInteractive.act()
