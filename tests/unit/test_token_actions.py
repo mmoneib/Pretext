@@ -104,8 +104,9 @@ class TestTokenActions(unittest.TestCase):
     tokenChoices.add_choice("Tomorrow never", 0, " dies.")
     token1 = "As fa"
     token2 = "Tomorrow never"
-    prediction1 = token.predict(tokenChoices, token1, 0)
-    prediction2 = token.predict(tokenChoices, token2, 0)
+    separator = ""
+    prediction1 = token.predict(tokenChoices, token1, 0, separator)
+    prediction2 = token.predict(tokenChoices, token2, 0, separator)
     self.assertEqual(prediction1, "r")
     self.assertEqual(prediction2, " dies.")
     
@@ -117,8 +118,9 @@ class TestTokenActions(unittest.TestCase):
     tokenChoices.add_choice("Tomorrow never", 1, " Nevertheless,")
     token1 = "As fa"
     token2 = "Tomorrow never"
-    prediction1 = token.predict(tokenChoices, token1, 1)
-    prediction2 = token.predict(tokenChoices, token2, 1)
+    separator = ""
+    prediction1 = token.predict(tokenChoices, token1, 1, separator)
+    prediction2 = token.predict(tokenChoices, token2, 1, separator)
     self.assertEqual(prediction1, "r ")
     self.assertEqual(prediction2, " dies. Nevertheless,")
     
@@ -130,8 +132,9 @@ class TestTokenActions(unittest.TestCase):
     tokenChoices.add_choice("Tomorrow never", 1, " Nevertheless,")
     token1 = "known. As fa"
     token2 = "yesterday. Tomorrow never"
-    prediction1 = token.predict(tokenChoices, token1, 1)
-    prediction2 = token.predict(tokenChoices, token2, 1)
+    separator = ""
+    prediction1 = token.predict(tokenChoices, token1, 1, separator)
+    prediction2 = token.predict(tokenChoices, token2, 1, separator)
     self.assertEqual(prediction1, "r ")
     self.assertEqual(prediction2, " dies. Nevertheless,")
     
@@ -139,7 +142,8 @@ class TestTokenActions(unittest.TestCase):
     tokenChoices = TokenChoices()
     tokenChoices.add_choice("As fa", 0, "r")
     token1 = "As fa"
-    prediction1 = token.predict(tokenChoices, token1, 3)
+    separator = ""
+    prediction1 = token.predict(tokenChoices, token1, 3, separator)
     self.assertEqual(prediction1, "r")
     
 if __name__=="__main__":

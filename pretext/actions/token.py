@@ -39,14 +39,14 @@ def calculate_histograms(tokenGraph):
       histograms.increment_value_of_token_position(tokenAndLinks[0], tokenAndLinks[1][i], i)
   return histograms
 
-def predict(tokenChoices, token, predictUpToPosition):
+def predict(tokenChoices, token, predictUpToPosition, separator):
   while len(token) > 0: #TODO Make the steps configurable
     choice=""
     for p in range(0, predictUpToPosition + 1):
       currentChoice = tokenChoices.get_choice(token, p)
       if currentChoice != None:
         choice += currentChoice
-    if choice != "":
+    if choice != separator:
       return choice
     token=token[1:len(token)] # Optimistic flow of evaluation of the prompt from its entirety down to the last character.
-  return "" # We could also return choice, but this is more explicit.
+  return separator # We could also return choice, but this is more explicit.

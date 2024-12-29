@@ -5,6 +5,7 @@ class Writing_InteractiveActivity:
   def __init__(self, config, tokenChoices):
     self.tokenChoices = tokenChoices
     self.predictUptoPosition = config.predictUptoPosition
+    self.tokenizationSeparator = config.tokenizationSeparator
     self.infinitePrompting = config.infinitePrompting
     self.infiniteFeedback = False # TODO Add to config.
 
@@ -32,12 +33,14 @@ class Predicting_YieldingActivity:
   def __init__(self, config, tokenChoices, initialPrompt):
     self.tokenChoices = tokenChoices
     self.predictUptoPosition = config.predictUptoPosition
+    self.tokenizationSeparator = config.tokenizationSeparator
     self.initialPrompt = initialPrompt
 
   def act(self):
-    prediction = TokenActions.predict(self.tokenChoices, self.initialPrompt, self.predictUptoPosition)
+    prediction = TokenActions.predict(self.tokenChoices, self.initialPrompt, self.predictUptoPosition, self.tokenizationSeparator)
     prompt = self.initialPrompt + prediction
-    while prediction != "":
+    while prediction != self.tokenizationSeparator:
       yield prediction
-      prediction = TokenActions.predict(self.tokenChoices, prompt, self.predictUptoPosition)
+      prediction = TokenActions.predict(self.tokenChoices, prompt, self.predictUptoPosition, self.tokenizationSeparator)
       prompt = prompt + prediction
+
