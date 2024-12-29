@@ -16,4 +16,4 @@ import pretext.assemblage.command_line as command_line
 #TODO Fix or prevent infinite loop at fine-grained (character) predictions when a token predict itself or 2 predict each others. Timeout?
 
 if __name__=="__main__":
-  scenarios.cmd_sync_predefined_prompt()
+  command_line.cmd_sync_predefined_prompt()

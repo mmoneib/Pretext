@@ -31,9 +31,10 @@ def cmd_sync_predefined_prompt():
   statisticsProcedural.act()
   tokenChoices = statisticsProcedural.output()
   print("Report:\n" , tokenChoices.get_choices())
-  predictingYielding = Predicting_YieldingActivity(config, tokenChoices, "#")
+  predictingYielding = Predicting_YieldingActivity(config, tokenChoices, "Lithuania")
   output = ""
+  #print("Prediction:\n")
   for yieldedPrediction in predictingYielding.act():
-      output += yieldedPrediction
-      print("Yielded Prediction:\n", yieldedPrediction)
-  print("Output:\n", output)
+      print(yieldedPrediction, end='', flush=True)
+
+#TODO Unit test better about the separator.

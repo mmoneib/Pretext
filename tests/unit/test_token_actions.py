@@ -104,9 +104,8 @@ class TestTokenActions(unittest.TestCase):
     tokenChoices.add_choice("Tomorrow never", 0, " dies.")
     token1 = "As fa"
     token2 = "Tomorrow never"
-    separator = ""
-    prediction1 = token.predict(tokenChoices, token1, 0, separator)
-    prediction2 = token.predict(tokenChoices, token2, 0, separator)
+    prediction1 = token.predict(tokenChoices, token1, 0, self.tokenizationSeparator)
+    prediction2 = token.predict(tokenChoices, token2, 0, self.tokenizationSeparator)
     self.assertEqual(prediction1, "r")
     self.assertEqual(prediction2, " dies.")
     
@@ -118,9 +117,8 @@ class TestTokenActions(unittest.TestCase):
     tokenChoices.add_choice("Tomorrow never", 1, " Nevertheless,")
     token1 = "As fa"
     token2 = "Tomorrow never"
-    separator = ""
-    prediction1 = token.predict(tokenChoices, token1, 1, separator)
-    prediction2 = token.predict(tokenChoices, token2, 1, separator)
+    prediction1 = token.predict(tokenChoices, token1, 1, self.tokenizationSeparator)
+    prediction2 = token.predict(tokenChoices, token2, 1, self.tokenizationSeparator)
     self.assertEqual(prediction1, "r ")
     self.assertEqual(prediction2, " dies. Nevertheless,")
     
@@ -132,9 +130,8 @@ class TestTokenActions(unittest.TestCase):
     tokenChoices.add_choice("Tomorrow never", 1, " Nevertheless,")
     token1 = "known. As fa"
     token2 = "yesterday. Tomorrow never"
-    separator = ""
-    prediction1 = token.predict(tokenChoices, token1, 1, separator)
-    prediction2 = token.predict(tokenChoices, token2, 1, separator)
+    prediction1 = token.predict(tokenChoices, token1, 1, self.tokenizationSeparator)
+    prediction2 = token.predict(tokenChoices, token2, 1, self.tokenizationSeparator)
     self.assertEqual(prediction1, "r ")
     self.assertEqual(prediction2, " dies. Nevertheless,")
     
@@ -142,9 +139,31 @@ class TestTokenActions(unittest.TestCase):
     tokenChoices = TokenChoices()
     tokenChoices.add_choice("As fa", 0, "r")
     token1 = "As fa"
-    separator = ""
-    prediction1 = token.predict(tokenChoices, token1, 3, separator)
+    prediction1 = token.predict(tokenChoices, token1, 3, self.tokenizationSeparator)
     self.assertEqual(prediction1, "r")
+
+  def test_predict_position_0_finalization(self):
+    tokenChoices = TokenChoices()
+    tokenChoices.add_choice("BCD", 0, "3")
+    tokenChoices.add_choice("KLM", 0, self.tokenizationSeparator) # Finalization.
+    tokenChoices.add_choice("LM", 0, "2")
+    tokenChoices.add_choice("Z", 0, "1")
+    token1 = "ABCD"
+    token2 = "JKLM"
+    token3 = "WXYZ"
+    prediction1 = token.predict(tokenChoices, token1, 0, self.tokenizationSeparator)
+    prediction2 = token.predict(tokenChoices, token2, 5, self.tokenizationSeparator)
+    prediction3 = token.predict(tokenChoices, token3, 3, self.tokenizationSeparator)
+    self.assertEqual(prediction1, "3")
+    self.assertEqual(prediction2, self.tokenizationSeparator)
+    self.assertEqual(prediction3, "1")
+
+  def test_predict_position_0_not_found(self):
+    tokenChoices = TokenChoices()
+    tokenChoices.add_choice("A", 0, "1")
+    token1 = "X"
+    prediction1 = token.predict(tokenChoices, token1, 0, self.tokenizationSeparator)
+    self.assertEqual(prediction1, self.tokenizationSeparator)
     
 if __name__=="__main__":
   unittest.main() 

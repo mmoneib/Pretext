@@ -39,8 +39,17 @@ class Predicting_YieldingActivity:
   def act(self):
     prediction = TokenActions.predict(self.tokenChoices, self.initialPrompt, self.predictUptoPosition, self.tokenizationSeparator)
     prompt = self.initialPrompt + prediction
+    #print("Initial prompt: " + self.initialPrompt)
+    #print("Prediciton: " + prediction)
+    #print("Prompt: " + prompt)
+    count=0
     while prediction != self.tokenizationSeparator:
       yield prediction
       prediction = TokenActions.predict(self.tokenChoices, prompt, self.predictUptoPosition, self.tokenizationSeparator)
       prompt = prompt + prediction
-
+      #print("Prediciton: " + prediction)
+      #print("Prompt: " + prompt)
+     # count=count+1
+      #if count ==5:
+       # exit()
+    print("Tokenization separator found. Prediction: " + prediction)

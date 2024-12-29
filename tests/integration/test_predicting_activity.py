@@ -13,14 +13,15 @@ class TestPredictingActivity(unittest.TestCase):
     tokenChoices = TokenChoices()
     tokenChoices.add_choice("a", 0, "b")
     tokenChoices.add_choice("b", 0, "c")
-    tokenChoices.add_choice("c", 0, "d")
-    tokenChoices.add_choice("d", 0, "") # Finalization by separator.
+    tokenChoices.add_choice("c", 0, "de")
+    tokenChoices.add_choice("de", 0, "") # Finalization by separator.
+    tokenChoices.add_choice("e", 0, "x")
     initialPrompt = "a"
     activity = Predicting_YieldingActivity(config, tokenChoices, initialPrompt)
     output = ""
     for s in activity.act():
       output += s
-    self.assertEqual(output, "bcd")
+    self.assertEqual(output, "bcde")
     tokenChoices.add_choice("b", 0, "x") # Replacement.
     tokenChoices.add_choice("bx", 0, "") 
     activity = Predicting_YieldingActivity(config, tokenChoices, initialPrompt)

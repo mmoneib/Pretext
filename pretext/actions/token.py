@@ -41,12 +41,14 @@ def calculate_histograms(tokenGraph):
 
 def predict(tokenChoices, token, predictUpToPosition, separator):
   while len(token) > 0: #TODO Make the steps configurable
-    choice=""
+    choice = None # Must be different from the separator so as to indicate not finding anything (including separator) and only then moving on to slicing the token.
     for p in range(0, predictUpToPosition + 1):
       currentChoice = tokenChoices.get_choice(token, p)
       if currentChoice != None:
+        if choice == None:
+          choice = ""
         choice += currentChoice
-    if choice != separator:
+    if choice is not None:
       return choice
     token=token[1:len(token)] # Optimistic flow of evaluation of the prompt from its entirety down to the last character.
-  return separator # We could also return choice, but this is more explicit.
+  return separator # Explicit finalization in case nothing is found. Highly unlikely in case of fine-grained tokenizzation.
