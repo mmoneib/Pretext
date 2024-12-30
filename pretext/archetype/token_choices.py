@@ -19,3 +19,7 @@ class TokenChoices:
   def get_choices(self):
     print("Choices: ", self.choices)
     return self.choices
+
+  def get_number_of_tokens(self):
+    return len(self.choices.keys())
+

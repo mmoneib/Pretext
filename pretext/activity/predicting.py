@@ -39,17 +39,15 @@ class Predicting_YieldingActivity:
   def act(self):
     prediction = TokenActions.predict(self.tokenChoices, self.initialPrompt, self.predictUptoPosition, self.tokenizationSeparator)
     prompt = self.initialPrompt + prediction
-    #print("Initial prompt: " + self.initialPrompt)
-    #print("Prediciton: " + prediction)
-    #print("Prompt: " + prompt)
-    count=0
+    count=1 # As already one prediction is done.
+    maxNumOfPredictions = 1000
     while prediction != self.tokenizationSeparator:
+      count = count + 1
+      if (count >= maxNumOfPredictions): # Mat indicates a certain circular referencing infinite loop:
+        print("....and so on.\n\nP.S. The graph of tokens may have circular references. To improve the results, tweak the granularity more towards coarse-grained tokens.")
+        break
       yield prediction
       prediction = TokenActions.predict(self.tokenChoices, prompt, self.predictUptoPosition, self.tokenizationSeparator)
       prompt = prompt + prediction
-      #print("Prediciton: " + prediction)
-      #print("Prompt: " + prompt)
-     # count=count+1
-      #if count ==5:
-       # exit()
-    print("Tokenization separator found. Prediction: " + prediction)
+    #print("Tokenization separator found. Prediction: " + prediction)
+

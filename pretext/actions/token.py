@@ -52,3 +52,4 @@ def predict(tokenChoices, token, predictUpToPosition, separator):
       return choice
     token=token[1:len(token)] # Optimistic flow of evaluation of the prompt from its entirety down to the last character.
   return separator # Explicit finalization in case nothing is found. Highly unlikely in case of fine-grained tokenizzation.
+
