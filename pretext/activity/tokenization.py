@@ -17,12 +17,12 @@ class Tokenization_ParallelActivity:
     self.isComplete = True
     self.tokens=[]
     if len(self.charsTokenizationSteps) > 0:
-      for i in range(0, len(self.charsTokenizationSteps)):
-        self.tokens.extend(TextActions.tokenize_by_chars(self.text, i+1))
+      for i in self.charsTokenizationSteps:
+        self.tokens.extend(TextActions.tokenize_by_chars(self.text, i))
         TokenActions.append_tokenization_separator(self.tokens, self.tokenizationSeparator)
     if len(self.wordsTokenizationSteps) > 0:
-      for i in range(0, len(self.wordsTokenizationSteps)):
-        self.tokens.extend(TextActions.tokenize_by_words(self.text, i+1))
+      for i in self.wordsTokenizationSteps:
+        self.tokens.extend(TextActions.tokenize_by_words(self.text, i))
         TokenActions.append_tokenization_separator(self.tokens, self.tokenizationSeparator)
     self.isComplete = True
     #print(self.tokens)

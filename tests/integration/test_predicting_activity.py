@@ -8,6 +8,7 @@ class TestPredictingActivity(unittest.TestCase):
 
   def test_predicting_yealding_finalized_flat_0_upto_position_0(self):
     config = Configuration(None) # None will use defaults.
+    config.tokenEvaluationStrategy = "optimistic"
     config.predictUptoPosition = 0
     config.tokenizationSeparator = ""
     tokenChoices = TokenChoices()

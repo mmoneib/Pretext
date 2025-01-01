@@ -12,9 +12,10 @@ class TestTokenizationActivity(unittest.TestCase):
   # Same inputs conceptually because we are testing integration of tasks rather than the tokenizaiton action itself.
   input1 = "ABCD"
   input2 = "QWER"
+  separator = ""
   #TODO Are the repitition in the last 4 tokens problematic? One is 1 word tokenization and the other is for 2 words.
-  expectedOutput1 = ["A","B","C","D","","AB","CD","","ABCD","","ABCD",""]
-  expectedOutput2 = ["Q","W","E","R","","QW","ER","","QWER","","QWER",""]
+  expectedOutput1 = ["A","B","C","D",separator,"AB","CD",separator,"ABCD","","ABCD",separator]
+  expectedOutput2 = ["Q","W","E","R",separator,"QW","ER",separator,"QWER","","QWER",separator]
     
   ## Tests tokenization using 2 threads run in a bare bone way without a queue, taking advantage of the shared memory space with the main thread.
   def test_tokenization_activity_parallel_using_threading_without_queue(self):
@@ -107,4 +108,15 @@ class TestTokenizationActivity(unittest.TestCase):
         output = [future1.result(timeout=2), future2.result(timeout=2)]
     self.assertEqual(output[0], self.expectedOutput1)
     self.assertEqual(output[1], self.expectedOutput2)
+
+  def test_tokenization_activity_with_non_consecutive_steps(self):
+    config = Configuration(None) # None will use defaults.	
+    config.charsTokenizationSteps = [2]
+    config.wordsTokenizationSteps = [2]
+    activity1 = Tokenization_ParallelActivity(config, self.input1)
+    activity2 = Tokenization_ParallelActivity(config, self.input2)
+    thisExpectedOutput1 = ["AB","CD",self.separator,"ABCD",""]
+    thisExpectedOutput2 = ["QW","ER",self.separator,"QWER",""]
+    self.assertEqual(activity1.act().output(), thisExpectedOutput1)
+    self.assertEqual(activity2.act().output(), thisExpectedOutput2)
 

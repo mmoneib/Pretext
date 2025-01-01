@@ -38,9 +38,14 @@ class Predicting_YieldingActivity:
     self.initialPrompt = initialPrompt
     self.maxNumOfPredictions = 1000
     self.maxNumOfWords = 1000
+    self.tokenEvaluationStrategy = config.tokenEvaluationStrategy
 
   def act(self):
-    prediction = TokenActions.predict(self.tokenChoices, self.initialPrompt, self.predictUptoPosition, self.tokenizationSeparator)
+    if self.tokenEvaluationStrategy == "optimistic":
+      func = TokenActions.predict_optimistically
+    elif self.tokenEvaluationStrategy == "pessimistic":
+      func = TokenActions.predict_pessimistically
+    prediction = func(self.tokenChoices, self.initialPrompt, self.predictUptoPosition, self.tokenizationSeparator)
     prompt = self.initialPrompt + prediction
     countPredictions=1 # As already one prediction is done.
     countWords = 0
@@ -54,7 +59,7 @@ class Predicting_YieldingActivity:
         print("....and so on.\n\nP.S. Maximum number of words achieved.")
         break
       yield prediction
-      prediction = TokenActions.predict(self.tokenChoices, prompt, self.predictUptoPosition, self.tokenizationSeparator)
+      prediction = func(self.tokenChoices, prompt, self.predictUptoPosition, self.tokenizationSeparator)
       prompt = prompt + prediction
     #print("Tokenization separator found. Prediction: " + prediction)
 

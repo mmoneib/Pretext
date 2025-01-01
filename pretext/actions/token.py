@@ -39,8 +39,9 @@ def calculate_histograms(tokenGraph):
       histograms.increment_value_of_token_position(tokenAndLinks[0], tokenAndLinks[1][i], i)
   return histograms
 
-def predict(tokenChoices, token, predictUpToPosition, separator):
-  while len(token) > 0: #TODO Make the steps configurable
+def predict_optimistically(tokenChoices, token, predictUpToPosition, separator):
+  step = 1 #TODO Make the steps configurable to make prediction more fuzzy.
+  while len(token) > 0:
     choice = None # Must be different from the separator so as to indicate not finding anything (including separator) and only then moving on to slicing the token.
     for p in range(0, predictUpToPosition + 1):
       currentChoice = tokenChoices.get_choice(token, p)
@@ -51,6 +52,26 @@ def predict(tokenChoices, token, predictUpToPosition, separator):
     if choice is not None:
       #print("Token: {}  |  Choice: {}".format(token,choice))
       return choice
-    token=token[1:len(token)] # Optimistic flow of evaluation of the prompt from its entirety down to the last character.
+    token=token[step:len(token)] # Optimistic flow of evaluation of the prompt from its entirety down to the last character.
   return separator # Explicit finalization in case nothing is found. Highly unlikely in case of fine-grained tokenizzation.
 
+# Instead of adding a new parameter for a common predict method and plague it with ifs, the architectural flow suggest passing the decision of the strategy to the activity and separation the prediction action into 2 for cleaner unit testing.
+def predict_pessimistically(tokenChoices, token, predictUpToPosition, separator):
+  step = 1 #TODO Make the steps configurable to make prediction more fuzzy.
+  initialInclusion = 1 # Number of right-most characters of the token left by the slice.
+  fullToken = token
+  token = fullToken[len(fullToken)-initialInclusion:len(fullToken)]
+  iterativeInclusion = initialInclusion
+  while len(fullToken)-iterativeInclusion >= -1: # More fundamental condition than comparing lengths of fullToken and token, which skip the last iteration if no choice is found.
+    choice = None # Must be different from the separator so as to indicate not finding anything (including separator) and only then moving on to slicing the token.
+    for p in range(0, predictUpToPosition + 1):
+      currentChoice = tokenChoices.get_choice(token, p)
+      if currentChoice != None:
+        if choice == None:
+          choice = ""
+        choice += currentChoice
+    if choice is not None:
+      return choice
+    token = fullToken[len(fullToken)-iterativeInclusion:len(fullToken)] # Optimistic flow of evaluation of the prompt from its entirety down to the last character.
+    iterativeInclusion = iterativeInclusion + step
+  return separator # Explicit finalization in case nothing is found. Highly unlikely in case of fine-grained tokenizzation.

@@ -98,16 +98,21 @@ class TestTokenActions(unittest.TestCase):
     self.assertEqual(topOfHistogram.get_choices()["D"][1], "mention")
     self.assertEqual(topOfHistogram.get_choices()["D"][2], "it.")
     
+  # Optimistic and pessimistic evaluation of tokens should behave the same if there are no valid predictions before the agreement point between both opposite directions.
   def test_predict_position_0_exact_token(self):
     tokenChoices = TokenChoices()
     tokenChoices.add_choice("As fa", 0, "r")
     tokenChoices.add_choice("Tomorrow never", 0, " dies.")
     token1 = "As fa"
     token2 = "Tomorrow never"
-    prediction1 = token.predict(tokenChoices, token1, 0, self.tokenizationSeparator)
-    prediction2 = token.predict(tokenChoices, token2, 0, self.tokenizationSeparator)
+    prediction1 = token.predict_optimistically(tokenChoices, token1, 0, self.tokenizationSeparator)
+    prediction2 = token.predict_optimistically(tokenChoices, token2, 0, self.tokenizationSeparator)
+    prediction3 = token.predict_pessimistically(tokenChoices, token1, 0, self.tokenizationSeparator)
+    prediction4 = token.predict_pessimistically(tokenChoices, token2, 0, self.tokenizationSeparator)
     self.assertEqual(prediction1, "r")
     self.assertEqual(prediction2, " dies.")
+    self.assertEqual(prediction3, "r")
+    self.assertEqual(prediction4, " dies.")
     
   def test_predict_position_1_exact_token(self):
     tokenChoices = TokenChoices()
@@ -117,10 +122,14 @@ class TestTokenActions(unittest.TestCase):
     tokenChoices.add_choice("Tomorrow never", 1, " Nevertheless,")
     token1 = "As fa"
     token2 = "Tomorrow never"
-    prediction1 = token.predict(tokenChoices, token1, 1, self.tokenizationSeparator)
-    prediction2 = token.predict(tokenChoices, token2, 1, self.tokenizationSeparator)
+    prediction1 = token.predict_optimistically(tokenChoices, token1, 1, self.tokenizationSeparator)
+    prediction2 = token.predict_optimistically(tokenChoices, token2, 1, self.tokenizationSeparator)
+    prediction3 = token.predict_pessimistically(tokenChoices, token1, 1, self.tokenizationSeparator)
+    prediction4 = token.predict_pessimistically(tokenChoices, token2, 1, self.tokenizationSeparator)
     self.assertEqual(prediction1, "r ")
     self.assertEqual(prediction2, " dies. Nevertheless,")
+    self.assertEqual(prediction3, "r ")
+    self.assertEqual(prediction4, " dies. Nevertheless,")
     
   def test_predict_position_1_partial(self):
     tokenChoices = TokenChoices()
@@ -130,17 +139,23 @@ class TestTokenActions(unittest.TestCase):
     tokenChoices.add_choice("Tomorrow never", 1, " Nevertheless,")
     token1 = "known. As fa"
     token2 = "yesterday. Tomorrow never"
-    prediction1 = token.predict(tokenChoices, token1, 1, self.tokenizationSeparator)
-    prediction2 = token.predict(tokenChoices, token2, 1, self.tokenizationSeparator)
+    prediction1 = token.predict_optimistically(tokenChoices, token1, 1, self.tokenizationSeparator)
+    prediction2 = token.predict_optimistically(tokenChoices, token2, 1, self.tokenizationSeparator)
+    prediction3 = token.predict_pessimistically(tokenChoices, token1, 1, self.tokenizationSeparator)
+    prediction4 = token.predict_pessimistically(tokenChoices, token2, 1, self.tokenizationSeparator)
     self.assertEqual(prediction1, "r ")
     self.assertEqual(prediction2, " dies. Nevertheless,")
+    self.assertEqual(prediction3, "r ")
+    self.assertEqual(prediction4, " dies. Nevertheless,")
     
   def test_predict_position_beyond_available(self):
     tokenChoices = TokenChoices()
     tokenChoices.add_choice("As fa", 0, "r")
     token1 = "As fa"
-    prediction1 = token.predict(tokenChoices, token1, 3, self.tokenizationSeparator)
+    prediction1 = token.predict_optimistically(tokenChoices, token1, 3, self.tokenizationSeparator)
+    prediction2 = token.predict_pessimistically(tokenChoices, token1, 3, self.tokenizationSeparator)
     self.assertEqual(prediction1, "r")
+    self.assertEqual(prediction2, "r")
 
   def test_predict_position_0_finalization(self):
     tokenChoices = TokenChoices()
@@ -151,19 +166,27 @@ class TestTokenActions(unittest.TestCase):
     token1 = "ABCD"
     token2 = "JKLM"
     token3 = "WXYZ"
-    prediction1 = token.predict(tokenChoices, token1, 0, self.tokenizationSeparator)
-    prediction2 = token.predict(tokenChoices, token2, 5, self.tokenizationSeparator)
-    prediction3 = token.predict(tokenChoices, token3, 3, self.tokenizationSeparator)
+    prediction1 = token.predict_optimistically(tokenChoices, token1, 0, self.tokenizationSeparator)
+    prediction2 = token.predict_optimistically(tokenChoices, token2, 5, self.tokenizationSeparator)
+    prediction3 = token.predict_optimistically(tokenChoices, token3, 3, self.tokenizationSeparator)
+    prediction4 = token.predict_pessimistically(tokenChoices, token1, 0, self.tokenizationSeparator)
+    prediction5 = token.predict_pessimistically(tokenChoices, token2, 5, self.tokenizationSeparator)
+    prediction6 = token.predict_pessimistically(tokenChoices, token3, 3, self.tokenizationSeparator)
     self.assertEqual(prediction1, "3")
     self.assertEqual(prediction2, self.tokenizationSeparator)
     self.assertEqual(prediction3, "1")
+    self.assertEqual(prediction4, "3")
+    self.assertEqual(prediction5, "2") # TODO Different the optimistic. Highlight difference between flows in a separate test.
+    self.assertEqual(prediction6, "1")
 
   def test_predict_position_0_not_found(self):
     tokenChoices = TokenChoices()
     tokenChoices.add_choice("A", 0, "1")
     token1 = "X"
-    prediction1 = token.predict(tokenChoices, token1, 0, self.tokenizationSeparator)
+    prediction1 = token.predict_optimistically(tokenChoices, token1, 0, self.tokenizationSeparator)
+    prediction2 = token.predict_pessimistically(tokenChoices, token1, 0, self.tokenizationSeparator)
     self.assertEqual(prediction1, self.tokenizationSeparator)
+    self.assertEqual(prediction2, self.tokenizationSeparator)
     
 if __name__=="__main__":
   unittest.main() 

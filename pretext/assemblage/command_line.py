@@ -15,6 +15,7 @@ def cmd_sync_predefined_prompt():
   parser.add_argument("-k", "--knowledge-files", help="path to files to be added to the scope of knowledge.", nargs='*', required=True) # nargs produce a list.
   parser.add_argument("-n", "--infinite-prompting", help="cycle between prompts and subsequent predictions until |exit| is typed.", action="store_true")
   parser.add_argument("-w", "--words-tokenization-steps", help="list of integers specifying the number of words considered in each tokenization step", nargs='*')
+  parser.add_argument("-e", "--token-evaluation-strategy", help="evaluation of token for prediction can be 'optimistic' trying from full prompt and slicing down, or 'pessimistic' trying from minimally sliced prompt and increasing, or 'mixed' alternating between both.", choices=["optimistic","pessimistc","mixed"])
   args = parser.parse_args()
   config=Configuration(args)
   tokenGraph=TokenGraph()
