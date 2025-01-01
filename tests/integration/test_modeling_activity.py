@@ -21,6 +21,7 @@ class TestModelingActivity(unittest.TestCase):
   def _run_2_modeling_tasks_in_parallel_with_worker_queue(self, parallelizationClass, queue):
     # Use configuration defaults.
     config = Configuration(None) # None will use defaults.
+    config.numOfNextTokens = 1
     # Override configuration defaults.
     pass
     # Define worker.

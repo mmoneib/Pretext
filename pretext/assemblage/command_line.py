@@ -18,7 +18,7 @@ def cmd_sync_predefined_prompt():
   args = parser.parse_args()
   config=Configuration(args)
   tokenGraph=TokenGraph()
-  for text in Reading_YieldingActivity(args.knowledge_files).act():
+  for text in Reading_YieldingActivity(config, args.knowledge_files).act():
     tokenizationParallel = Tokenization_ParallelActivity(config, text)
     tokenizationParallel.act()
     tokens=tokenizationParallel.output()
@@ -31,7 +31,7 @@ def cmd_sync_predefined_prompt():
   statisticsProcedural.act()
   tokenChoices = statisticsProcedural.output()
   print("Report:\n" , tokenChoices.get_choices())
-  predictingYielding = Predicting_YieldingActivity(config, tokenChoices, "What is justice?")
+  predictingYielding = Predicting_YieldingActivity(config, tokenChoices, " nature")
   output = ""
   #print("Prediction:\n")
   for yieldedPrediction in predictingYielding.act():

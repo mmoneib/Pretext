@@ -4,6 +4,7 @@ class Statistics_ProceduralActivity:
 
   def __init__(self, tokenGraph):
     self.tokenGraph = tokenGraph
+    self.meta = {} # A backdoor too add values and/or keys which are not part of the main output.
 
   def act(self):
     self.tokenScore = TokenActions.calculate_histograms(self.tokenGraph)
@@ -13,3 +14,5 @@ class Statistics_ProceduralActivity:
   def output(self):
     return self.tokenChoice
 
+  def get_meta_output(self):
+    return self.meta

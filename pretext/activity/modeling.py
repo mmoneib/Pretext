@@ -5,13 +5,14 @@ class Modeling_ParallelActivity:
 
   def __init__(self, configuration, tokens, tokenGraph):
     self.tokenizationSeparator = configuration.tokenizationSeparator
+    self.numOfNextTokens = configuration.numOfNextTokens
     self.tokens = tokens
     self.tokenGraph = tokenGraph
     self.isBlocking = True
     self.isComplete = False
 
   def act(self):
-    self.tokenGraph = TokenActions.model_by_next(1, self.tokens, self.tokenGraph, self.tokenizationSeparator) # TODO Make it configurable.
+    self.tokenGraph = TokenActions.model_by_next(self.numOfNextTokens, self.tokens, self.tokenGraph, self.tokenizationSeparator)
     self.isComplete = True
     return self # For chaining.
 

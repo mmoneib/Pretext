@@ -1,4 +1,5 @@
 from ..actions import token as TokenActions
+from ..actions import text as TextActions
 
 class Writing_InteractiveActivity:
 
@@ -35,16 +36,22 @@ class Predicting_YieldingActivity:
     self.predictUptoPosition = config.predictUptoPosition
     self.tokenizationSeparator = config.tokenizationSeparator
     self.initialPrompt = initialPrompt
+    self.maxNumOfPredictions = 1000
+    self.maxNumOfWords = 1000
 
   def act(self):
     prediction = TokenActions.predict(self.tokenChoices, self.initialPrompt, self.predictUptoPosition, self.tokenizationSeparator)
     prompt = self.initialPrompt + prediction
-    count=1 # As already one prediction is done.
-    maxNumOfPredictions = 1000
+    countPredictions=1 # As already one prediction is done.
+    countWords = 0
     while prediction != self.tokenizationSeparator:
-      count = count + 1
-      if (count >= maxNumOfPredictions): # Mat indicates a certain circular referencing infinite loop:
+      countPredictions = countPredictions + 1
+      countWords = countWords + TextActions.count_words(prediction)
+      if (countPredictions >= self.maxNumOfPredictions): # May indicates a certain circular referencing infinite loop:
         print("....and so on.\n\nP.S. The graph of tokens may have circular references. To improve the results, tweak the granularity more towards coarse-grained tokens.")
+        break
+      if (countWords > self.maxNumOfWords):
+        print("....and so on.\n\nP.S. Maximum number of words achieved.")
         break
       yield prediction
       prediction = TokenActions.predict(self.tokenChoices, prompt, self.predictUptoPosition, self.tokenizationSeparator)
