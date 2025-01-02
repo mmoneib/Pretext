@@ -10,8 +10,10 @@ class Configuration:
     self.predictUptoPosition=0 # Scores each token individually. Might be useful for keywords strict tokens.
     self.commonWordReplacement=""
     self.tokenizationSeparator="" # Specific to Tokenization as it might not be suitable for other activites.
-    self.wordsTokenizationSteps = [100]
-    self.tokenEvaluationStrategy = "pessimistic"
+    self.wordsTokenizationSteps = [1,2,3]
+    #self.tokenEvaluationStrategy = "pessimistic"
+    self.tokenEvaluationStrategy = "optimistic"
+    #self.tokenEvaluationStrategy = "mixed"
     # Overrides (by command-line parameters)
     if args is not None:
       self.infinitePrompting=args.infinite_prompting

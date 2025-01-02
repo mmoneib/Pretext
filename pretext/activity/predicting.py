@@ -41,15 +41,18 @@ class Predicting_YieldingActivity:
     self.tokenEvaluationStrategy = config.tokenEvaluationStrategy
 
   def act(self):
-    if self.tokenEvaluationStrategy == "optimistic":
-      func = TokenActions.predict_optimistically
+    funcs = (TokenActions.predict_optimistically,TokenActions.predict_pessimistically)
+    if self.tokenEvaluationStrategy == "optimistic" or self.tokenEvaluationStrategy == "mixed":
+      func = funcs[0]
     elif self.tokenEvaluationStrategy == "pessimistic":
-      func = TokenActions.predict_pessimistically
+      func = funcs[1]
     prediction = func(self.tokenChoices, self.initialPrompt, self.predictUptoPosition, self.tokenizationSeparator)
     prompt = self.initialPrompt + prediction
     countPredictions=1 # As already one prediction is done.
     countWords = 0
     while prediction != self.tokenizationSeparator:
+      if self.tokenEvaluationStrategy == "mixed":
+        func = funcs[countPredictions%2]
       countPredictions = countPredictions + 1
       countWords = countWords + TextActions.count_words(prediction)
       if (countPredictions >= self.maxNumOfPredictions): # May indicates a certain circular referencing infinite loop:

@@ -24,8 +24,8 @@ import pretext.assemblage.command_line as command_line
 #TODO Remove implicit default configs and make them required.
 #TODO Make common words configurable.
 #TODO Add report about the number of references per token?
-#TODO Slice from smallest right part of prompt, increasing leftward.
-#TODO Alternate between both sides of slicing.
+#TODO Extreme tokenization?
+#TODO Add tests for mixed evaluation of tokens.
 # For TopOfHistogram statistics, there are 2 traps: Tokenization by small number of chars increase probability of infinite loops of circular references. Tokenization by large number of words increase the probability of output flowing only from a single input document. Alsom when choices are of the same size as tokens, a solution will also be found at that size, which increases the probability of those traps. The circular reference trap is mainly due to redundancy in languages.
 
 if __name__=="__main__":

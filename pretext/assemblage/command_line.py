@@ -32,7 +32,7 @@ def cmd_sync_predefined_prompt():
   statisticsProcedural.act()
   tokenChoices = statisticsProcedural.output()
   print("Report:\n" , tokenChoices.get_choices())
-  predictingYielding = Predicting_YieldingActivity(config, tokenChoices, " nature")
+  predictingYielding = Predicting_YieldingActivity(config, tokenChoices, " billions")
   output = ""
   #print("Prediction:\n")
   for yieldedPrediction in predictingYielding.act():
