@@ -75,3 +75,9 @@ def predict_pessimistically(tokenChoices, token, predictUpToPosition, separator)
     token = fullToken[len(fullToken)-iterativeInclusion:len(fullToken)] # Optimistic flow of evaluation of the prompt from its entirety down to the last character.
     iterativeInclusion = iterativeInclusion + step
   return separator # Explicit finalization in case nothing is found. Highly unlikely in case of fine-grained tokenizzation.
+
+def search_in_tokens(tokens, criterion):
+  for t in tokens:
+    if t.find(criterion) != -1: # Returns first find.
+      return t
+  return ""

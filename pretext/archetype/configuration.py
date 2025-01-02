@@ -10,7 +10,7 @@ class Configuration:
     self.predictUptoPosition=0 # Scores each token individually. Might be useful for keywords strict tokens.
     self.commonWordReplacement=""
     self.tokenizationSeparator="" # Specific to Tokenization as it might not be suitable for other activites.
-    self.wordsTokenizationSteps = [1,2,3]
+    self.wordsTokenizationSteps = [2,3,4]
     #self.tokenEvaluationStrategy = "pessimistic"
     self.tokenEvaluationStrategy = "optimistic"
     #self.tokenEvaluationStrategy = "mixed"

@@ -47,6 +47,8 @@ class Predicting_YieldingActivity:
     elif self.tokenEvaluationStrategy == "pessimistic":
       func = funcs[1]
     prediction = func(self.tokenChoices, self.initialPrompt, self.predictUptoPosition, self.tokenizationSeparator)
+    if prediction == "":
+      prediction = TokenActions.search_in_tokens(self.tokenChoices.get_tokens(), self.initialPrompt) # Fuzziness through inclustion.
     prompt = self.initialPrompt + prediction
     countPredictions=1 # As already one prediction is done.
     countWords = 0

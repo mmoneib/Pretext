@@ -23,3 +23,6 @@ class TokenChoices:
   def get_number_of_tokens(self):
     return len(self.choices.keys())
 
+  def get_tokens(self):
+    return self.choices.keys()
+
