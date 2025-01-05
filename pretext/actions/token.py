@@ -100,3 +100,10 @@ def search_startswith_tokens(tokens, criterion):
     if t.startswith(criterion) == True: # Returns first find.
       return t
   return ""
+
+def get_max_size_of_token(tokens):
+  maxSize=0
+  for t in tokens:
+    if len(t) > maxSize:
+      maxSize = len(t)
+  return maxSize

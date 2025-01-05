@@ -42,6 +42,7 @@ class Predicting_YieldingActivity:
     self.initialPrompt = initialPrompt
 
   def act(self):
+    maxTokenSize=TokenActions.get_max_size_of_token(self.tokenChoices.get_tokens()) # TODO: Should be max token length.
     funcs = (TokenActions.predict_optimistically,TokenActions.predict_pessimistically)
     if self.tokenEvaluationStrategy == "optimistic" or self.tokenEvaluationStrategy == "mixed":
       func = funcs[0]
@@ -73,7 +74,7 @@ class Predicting_YieldingActivity:
         break
       yield prediction
       prediction = func(self.tokenChoices, prompt, self.predictUptoPosition, self.tokenizationSeparator)
-      begin=1 # TODO: Should be max token length.
+      begin = len(prompt) - maxTokenSize
       while prediction == "" and begin<=len(prompt):
         token = TokenActions.search_in_tokens(self.tokenChoices.get_tokens(), prompt[begin:]) # Fuzziness.
         begin=begin+1
