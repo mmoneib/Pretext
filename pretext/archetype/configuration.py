@@ -3,17 +3,19 @@ class Configuration:
 
   def __init__(self, args):
     # Defaults
-    self.charsTokenizationSteps = [1] # Important for partial matching of prompts but causes infinite loops and non-sensical output.
-    self.infinitePrompting=False
-    self.numOfNextTokens=1 # More than 1, gives opportunity for larger tokens to hit, favors copying as-is.
-    self.numberOfTokenizationThreads=1
-    self.predictUptoPosition=0 # Scores each token individually. Might be useful for keywords strict tokens.
+    self.charsTokenizationSteps = []
     self.commonWordReplacement=""
-    self.tokenizationSeparator="" # Specific to Tokenization as it might not be suitable for other activites.
-    self.wordsTokenizationSteps = []
+    self.infinitePrompting=False
+    self.maxNumOfPredictions=1000
+    self.maxNumOfWords=1000
+    self.numOfNextTokens=0.5 # Should be used in conjunction with 'predictUptoPosition'. Both may have no effect in case of sliced predictions.
+    self.numOfTokenizationThreads=1
+    self.predictUptoPosition=0 # Scores each token individually. Might be useful for keywords strict tokens.
+    self.tokenEvaluationStrategy = "optimistic"
     #self.tokenEvaluationStrategy = "pessimistic"
-    #self.tokenEvaluationStrategy = "optimistic"
-    self.tokenEvaluationStrategy = "mixed"
+    #self.tokenEvaluationStrategy = "mixed"
+    self.tokenizationSeparator=""
+    self.wordsTokenizationSteps = [8,10,12]
     # Overrides (by command-line parameters)
     if args is not None:
       self.infinitePrompting=args.infinite_prompting

@@ -1,6 +1,6 @@
 import re
 
-commonWords = {" the ", " of ", " to ", " on ", " at ", " for ", " by ", " a ", " an ", " in ", " and ", " is ", " was ", " are ", " he ", " she ", " it ", " as ", " if ", " that ", " his ", " her ", " I "} # Padded to avoid replacing parts of other words.
+commonWords = {" the ", " of ", " to ", " on ", " at ", " for ", " by ", " a ", " an ", " in ", " and ", " is ", " was ", " are ", " he ", " she ", " it ", " as ", " if ", " that ", " his ", " her ", " I ", " him "} # Padded to avoid replacing parts of other words.
 
 def remove_common_words(text, commonWordReplacement): # Replaces the common word with a common prefix for the next.
   if commonWordReplacement.isspace() or commonWordReplacement == "":
@@ -32,6 +32,18 @@ def tokenize_by_chars(text, numOfCharsInToken):
     if token!="": # For the last token < numOfCharsInToken.
       tokensList.append(token)
     return tokensList
+
+def tokenize_by_chars_simplified(text, numOfCharsInToken):
+  tokensList=[]
+  windowStart=0
+  windowEnd=numOfCharsInToken
+  textSize=len(text)
+  while windowStart < textSize:
+    token=text[windowStart:windowEnd] 
+    tokensList.append(token)
+    windowStart=windowStart+1
+    windowEnd=windowEnd+1
+  return tokensList
 
 def tokenize_by_words(text, numOfWords):
   tokensList=[]

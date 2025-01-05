@@ -13,7 +13,12 @@ def model_by_next(numOfNextTokens, tokens, tokenGraph, separator):
      if tokens[i] == separator: # Could have been removed by another action, but better be embeedded as it has no use.
        continue
      # Python gracefully doesn't throw errors when slicing out of bounds.
-     tokenGraph.link(tokens[i], tokens[i+1:i+numOfNextTokens+1])
+     if numOfNextTokens >= 1:
+       tokenGraph.link(tokens[i], tokens[i+1:i+numOfNextTokens+1])
+     elif numOfNextTokens < 1 and numOfNextTokens > 0:
+       slicedToken=tokens[i+1][0:round(len(tokens[i+1])*numOfNextTokens)]
+       print(tokens[i] +" ||| " +slicedToken)
+       tokenGraph.link(tokens[i], [slicedToken])
   return tokenGraph
 
 def top_of_histogram(tokenGraph):
@@ -77,7 +82,21 @@ def predict_pessimistically(tokenChoices, token, predictUpToPosition, separator)
   return separator # Explicit finalization in case nothing is found. Highly unlikely in case of fine-grained tokenizzation.
 
 def search_in_tokens(tokens, criterion):
+  #print("Searching: " + criterion)
+  found=""
   for t in tokens:
-    if t.find(criterion) != -1: # Returns first find.
+    i = t.find(criterion)
+    if i != -1:
+      potentialFind=t
+   #   print("Potential:" + potentialFind)
+      if found=="" or len(potentialFind) < len(found): # As there is no constant for maximum int value in Python 3. Less than because we want the most fitting find.
+        found=potentialFind
+    #    print ("FFFFFFFF:"+found)
+  #print("Exit")
+  return found
+
+def search_startswith_tokens(tokens, criterion):
+  for t in tokens:
+    if t.startswith(criterion) == True: # Returns first find.
       return t
   return ""

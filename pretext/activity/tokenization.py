@@ -6,9 +6,9 @@ class Tokenization_ParallelActivity:
 
   def __init__(self, configuration, text):
     self.charsTokenizationSteps=configuration.charsTokenizationSteps
-    self.wordsTokenizationSteps=configuration.wordsTokenizationSteps
+    self.numOfTokenizationThreads=configuration.numOfTokenizationThreads
     self.tokenizationSeparator=configuration.tokenizationSeparator
-    self.numberOfTokenizationThreads=configuration.numberOfTokenizationThreads
+    self.wordsTokenizationSteps=configuration.wordsTokenizationSteps
     self.isBlocking = True # Should be allowed to be false if partial outputs are to be tolerated. (Un)blocking mechanism is necessary for parallel computations.
     self.text = text
     self.isComplete = False

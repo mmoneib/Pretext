@@ -32,8 +32,7 @@ def cmd_sync_predefined_prompt():
   statisticsProcedural.act()
   tokenChoices = statisticsProcedural.output()
   print("Report:\n" , tokenChoices.get_choices())
-  initialPrompt = "0"
-  #initialPrompt = " " + initialPrompt # As tokenization is done with a preceding space.
+  initialPrompt = "Go"
   predictingYielding = Predicting_YieldingActivity(config, tokenChoices, initialPrompt)
   output = ""
   #print("Prediction:\n")

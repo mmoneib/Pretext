@@ -32,13 +32,14 @@ class Writing_InteractiveActivity:
 class Predicting_YieldingActivity:
   
   def __init__(self, config, tokenChoices, initialPrompt):
-    self.tokenChoices = tokenChoices
+    self.charsTokenizationSteps = config.charsTokenizationSteps
+    self.maxNumOfPredictions = config.maxNumOfPredictions
+    self.maxNumOfWords = config.maxNumOfWords
     self.predictUptoPosition = config.predictUptoPosition
     self.tokenizationSeparator = config.tokenizationSeparator
-    self.initialPrompt = initialPrompt
-    self.maxNumOfPredictions = 1000
-    self.maxNumOfWords = 1000
     self.tokenEvaluationStrategy = config.tokenEvaluationStrategy
+    self.tokenChoices = tokenChoices
+    self.initialPrompt = initialPrompt
 
   def act(self):
     funcs = (TokenActions.predict_optimistically,TokenActions.predict_pessimistically)
@@ -48,13 +49,20 @@ class Predicting_YieldingActivity:
       func = funcs[1]
     prediction = func(self.tokenChoices, self.initialPrompt, self.predictUptoPosition, self.tokenizationSeparator)
     if prediction == "":
-      prediction = TokenActions.search_in_tokens(self.tokenChoices.get_tokens(), self.initialPrompt) # Fuzziness through inclustion.
-    prompt = self.initialPrompt + prediction
+      token = TokenActions.search_in_tokens(self.tokenChoices.get_tokens(), self.initialPrompt) # Fuzziness through inclustion.
+      prediction = func(self.tokenChoices, token, self.predictUptoPosition, self.tokenizationSeparator)
+    prompt = prediction
     countPredictions=1 # As already one prediction is done.
     countWords = 0
+    predictedSet=set() # To detect and stop repititions in case of non stochastic flows.
     while prediction != self.tokenizationSeparator:
+      if prediction in predictedSet: # This test won't be valid for stochastic or inherently cyclic flows.
+        print("...but I don't want to repeat myself.")
+        break
+      else:
+        predictedSet.add(prediction)
       if self.tokenEvaluationStrategy == "mixed":
-        func = funcs[countPredictions%2]
+        func = funcs[countPredictions%2] # Alternate between methods.
       countPredictions = countPredictions + 1
       countWords = countWords + TextActions.count_words(prediction)
       if (countPredictions >= self.maxNumOfPredictions): # May indicates a certain circular referencing infinite loop:
@@ -65,6 +73,13 @@ class Predicting_YieldingActivity:
         break
       yield prediction
       prediction = func(self.tokenChoices, prompt, self.predictUptoPosition, self.tokenizationSeparator)
+      begin=1 # TODO: Should be max token length.
+      while prediction == "" and begin<=len(prompt):
+        token = TokenActions.search_in_tokens(self.tokenChoices.get_tokens(), prompt[begin:]) # Fuzziness.
+        begin=begin+1
+        if token == "":
+          continue
+        prediction = func(self.tokenChoices, token, self.predictUptoPosition, self.tokenizationSeparator)
       prompt = prompt + prediction
     #print("Tokenization separator found. Prediction: " + prediction)
 
