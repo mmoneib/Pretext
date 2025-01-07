@@ -42,7 +42,6 @@ class Predicting_YieldingActivity:
     self.initialPrompt = initialPrompt
 
   def act(self):
-    maxTokenSize=TokenActions.get_max_size_of_token(self.tokenChoices.get_tokens()) # TODO: Should be max token length.
     funcs = (TokenActions.predict_optimistically,TokenActions.predict_pessimistically)
     if self.tokenEvaluationStrategy == "optimistic" or self.tokenEvaluationStrategy == "mixed":
       func = funcs[0]
@@ -55,6 +54,7 @@ class Predicting_YieldingActivity:
     prompt = prediction
     countPredictions=1 # As already one prediction is done.
     countWords = 0
+    maxTokenSize=TokenActions.get_max_size_of_token(self.tokenChoices.get_tokens())
     predictedSet=set() # To detect and stop repititions in case of non stochastic flows.
     while prediction != self.tokenizationSeparator:
       if prediction in predictedSet: # This test won't be valid for stochastic or inherently cyclic flows.
@@ -74,13 +74,13 @@ class Predicting_YieldingActivity:
         break
       yield prediction
       prediction = func(self.tokenChoices, prompt, self.predictUptoPosition, self.tokenizationSeparator)
-      begin = len(prompt) - maxTokenSize
-      while prediction == "" and begin<=len(prompt):
-        token = TokenActions.search_in_tokens(self.tokenChoices.get_tokens(), prompt[begin:]) # Fuzziness.
-        begin=begin+1
-        if token == "":
-          continue
-        prediction = func(self.tokenChoices, token, self.predictUptoPosition, self.tokenizationSeparator)
+      #begin = len(prompt) - maxTokenSize
+      #while prediction == "" and begin<=len(prompt): #TODO: Fix failing test.
+      #  token = TokenActions.search_in_tokens(self.tokenChoices.get_tokens(), prompt[begin:]) # Fuzziness.
+      #  begin=begin+1
+      #  if token == "":
+      #    continue
+      #  prediction = func(self.tokenChoices, token, self.predictUptoPosition, self.tokenizationSeparator)
       prompt = prompt + prediction
     #print("Tokenization separator found. Prediction: " + prediction)
 

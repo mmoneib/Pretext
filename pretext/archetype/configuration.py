@@ -8,9 +8,9 @@ class Configuration:
     self.infinitePrompting=False
     self.maxNumOfPredictions=1000
     self.maxNumOfWords=1000
-    self.numOfNextTokens=0.5 # Should be used in conjunction with 'predictUptoPosition'. Both may have no effect in case of sliced predictions.
+    self.numOfNextTokens=1 # Should be used in conjunction with 'predictUptoPosition'. Both may have no effect in case of sliced predictions. 0.1 and more.
     self.numOfTokenizationThreads=1
-    self.predictUptoPosition=0 # Scores each token individually. Might be useful for keywords strict tokens.
+    self.predictUptoPosition=0 # Scores each token individually. Might be useful for keywords strict tokens. 0 if numOfNextTokens is <=1.
     self.tokenEvaluationStrategy = "optimistic"
     #self.tokenEvaluationStrategy = "pessimistic"
     #self.tokenEvaluationStrategy = "mixed"
