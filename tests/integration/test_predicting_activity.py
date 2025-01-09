@@ -8,6 +8,7 @@ class TestPredictingActivity(unittest.TestCase):
 
   def test_predicting_yealding_finalized_flat_0_upto_position_0(self):
     config = Configuration(None) # None will use defaults.
+    config.fuzzyFallbackSearch=False
     config.tokenEvaluationStrategy = "optimistic"
     config.predictUptoPosition = 0
     config.tokenizationSeparator = ""
@@ -33,6 +34,7 @@ class TestPredictingActivity(unittest.TestCase):
 
   def test_predicting_yealding_unfinalized_flat_0_upto_position_0(self):
     config = Configuration(None) # None will use defaults.
+    config.fuzzyFallbackSearch=False
     config.predictUptoPosition = 0
     config.tokenizationSeparator = ""
     tokenChoices = TokenChoices()
@@ -48,6 +50,7 @@ class TestPredictingActivity(unittest.TestCase):
 
   def test_predicting_yealding_mix_0_1_2_upto_position_2(self):
     config = Configuration(None) # None will use defaults.
+    config.fuzzyFallbackSearch=False
     config.predictUptoPosition = 2
     config.tokenizationSeparator = ""
     tokenChoices = TokenChoices()

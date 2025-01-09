@@ -33,9 +33,11 @@ class Predicting_YieldingActivity:
   
   def __init__(self, config, tokenChoices, initialPrompt):
     self.charsTokenizationSteps = config.charsTokenizationSteps
+    self.fuzzyFallbackSearch = config.fuzzyFallbackSearch
     self.maxNumOfPredictions = config.maxNumOfPredictions
     self.maxNumOfWords = config.maxNumOfWords
     self.predictUptoPosition = config.predictUptoPosition
+    self.separateTokensInOutput = config.separateTokensInOutput
     self.tokenizationSeparator = config.tokenizationSeparator
     self.tokenEvaluationStrategy = config.tokenEvaluationStrategy
     self.tokenChoices = tokenChoices
@@ -72,15 +74,19 @@ class Predicting_YieldingActivity:
       if (countWords > self.maxNumOfWords):
         print("....and so on.\n\nP.S. Maximum number of words achieved.")
         break
+      if self.separateTokensInOutput == True:
+        prediction = prediction + "|"
       yield prediction
       prediction = func(self.tokenChoices, prompt, self.predictUptoPosition, self.tokenizationSeparator)
-      #begin = len(prompt) - maxTokenSize
-      #while prediction == "" and begin<=len(prompt): #TODO: Fix failing test.
-      #  token = TokenActions.search_in_tokens(self.tokenChoices.get_tokens(), prompt[begin:]) # Fuzziness.
-      #  begin=begin+1
-      #  if token == "":
-      #    continue
-      #  prediction = func(self.tokenChoices, token, self.predictUptoPosition, self.tokenizationSeparator)
+      if prediction == "" and self.fuzzyFallbackSearch != None:
+        if self.fuzzyFallbackSearch == "first match":
+          fallbackFunc = TokenActions.search_startswith_tokens
+        elif self.fuzzyFallbackSearch == "stochastic":
+          fallbackFunc = TokenActions.search_startswith_tokens_stochastic
+        begin = len(prompt) - maxTokenSize  # Try to match with larger criterion.
+        while prediction == "" and begin < len(prompt):
+          prediction = fallbackFunc(self.tokenChoices.get_tokens(), prompt[begin:]) # Fuzziness by partial search; no predicition.
+          begin = begin + 1
       prompt = prompt + prediction
     #print("Tokenization separator found. Prediction: " + prediction)
 

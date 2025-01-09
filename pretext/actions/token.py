@@ -2,6 +2,7 @@
 from ..archetype.token_graph import TokenGraph
 from ..archetype.token_scores import TokenScores
 from ..archetype.token_choices import TokenChoices
+import random
 
 # Add separator to avoid mixing between tokens of different granularities when modeling.
 def append_tokenization_separator(tokens, separator): #TODO Should this be embedded in tokenization itself? I think so.
@@ -81,25 +82,31 @@ def predict_pessimistically(tokenChoices, token, predictUpToPosition, separator)
     iterativeInclusion = iterativeInclusion + step
   return separator # Explicit finalization in case nothing is found. Highly unlikely in case of fine-grained tokenizzation.
 
-def search_in_tokens(tokens, criterion):
-  #print("Searching: " + criterion)
+def search_in_tokens(tokens, criterion): # A barely smart fuzzy search with the aim of finding relevant tokens.
   found=""
   for t in tokens:
     i = t.find(criterion)
     if i != -1:
       potentialFind=t
-   #   print("Potential:" + potentialFind)
       if found=="" or len(potentialFind) < len(found): # As there is no constant for maximum int value in Python 3. Less than because we want the most fitting find.
         found=potentialFind
-    #    print ("FFFFFFFF:"+found)
-  #print("Exit")
   return found
 
-def search_startswith_tokens(tokens, criterion):
+def search_startswith_tokens(tokens, criterion): # A non-smart (no statistics involved) fuzzy search wwith the aim of mixing into a flow.
   for t in tokens:
     if t.startswith(criterion) == True: # Returns first find.
-      return t
+#      print("\nsearch_startswith_tokens: Criterion-->{} Token-->{}".format(criterion, t))
+      return t.replace(criterion, "", 1) # Replacing the matched starting part for convenience of printing directly after the criterion.
   return ""
+
+def search_startswith_tokens_stochastic(tokens, criterion):
+  potentialTokens=[]
+  for t in tokens:
+    if t.startswith(criterion) == True: # Returns first find.
+      potentialTokens.append(t)
+  if len(potentialTokens) == 0:
+    return ""
+  return random.choice(potentialTokens).replace(criterion, "", 1) 
 
 def get_max_size_of_token(tokens):
   maxSize=0
