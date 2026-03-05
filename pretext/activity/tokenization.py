@@ -18,6 +18,7 @@ class Tokenization_ParallelActivity:
     self.tokens=[]
     if len(self.charsTokenizationSteps) > 0:
       for i in self.charsTokenizationSteps:
+        #print("@@@@@@@@@@@@@@@@@@@@ ", i)
         self.tokens.extend(TextActions.tokenize_by_chars(self.text, i))
         TokenActions.append_tokenization_separator(self.tokens, self.tokenizationSeparator)
     if len(self.wordsTokenizationSteps) > 0:

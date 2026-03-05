@@ -18,7 +18,7 @@ def model_by_next(numOfNextTokens, tokens, tokenGraph, separator):
        tokenGraph.link(tokens[i], tokens[i+1:i+numOfNextTokens+1])
      elif numOfNextTokens < 1 and numOfNextTokens > 0:
        slicedToken=tokens[i+1][0:round(len(tokens[i+1])*numOfNextTokens)]
-       print(tokens[i] +" ||| " +slicedToken)
+       #print(tokens[i] +" ||| " +slicedToken)
        tokenGraph.link(tokens[i], [slicedToken])
   return tokenGraph
 

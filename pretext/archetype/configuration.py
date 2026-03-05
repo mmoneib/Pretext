@@ -4,7 +4,7 @@ class Configuration:
   def __init__(self, args):
     # Defaults
     self.charsTokenizationSteps = [7,9,13]
-    self.commonWordReplacement=""
+    self.commonWordReplacement=None
     #self.fuzzyFallbackSearch=None
     #self.fuzzyFallbackSearch="first match"
     self.fuzzyFallbackSearch="stochastic"
@@ -23,7 +23,9 @@ class Configuration:
     # Overrides (by command-line parameters)
     if args is not None:
       self.infinitePrompting=args.infinite_prompting
+      self.prompt=args.prompt
       if args.chars_tokenization_steps is not None:
         self.charsTokenizationSteps = args.chars_tokenization_steps
+        print( self.charsTokenizationSteps )
       if args.words_tokenization_steps is not None:
-        self.wordsTokenizationSteps=args.words_tokenization_steps
+        self.wordsTokenizationSteps = args.words_tokenization_steps
