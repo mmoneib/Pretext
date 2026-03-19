@@ -1,5 +1,6 @@
 from ..actions import token as TokenActions
 from ..actions import text as TextActions
+from ..archetype.constants import *
 
 class Writing_InteractiveActivity:
 
@@ -45,9 +46,9 @@ class Predicting_YieldingActivity:
 
   def act(self):
     funcs = (TokenActions.predict_optimistically,TokenActions.predict_pessimistically)
-    if self.tokenEvaluationStrategy == "optimistic" or self.tokenEvaluationStrategy == "mixed":
+    if self.tokenEvaluationStrategy == arg_tokenEvaluationStrategy_choice_optimistic or self.tokenEvaluationStrategy == arg_tokenEvaluationStrategy_choice_mixed:
       func = funcs[0]
-    elif self.tokenEvaluationStrategy == "pessimistic":
+    elif self.tokenEvaluationStrategy == arg_tokenEvaluationStrategy_choice_pessimistic:
       func = funcs[1]
     prediction = func(self.tokenChoices, self.initialPrompt, self.predictUptoPosition, self.tokenizationSeparator)
     if prediction == "":
@@ -64,7 +65,7 @@ class Predicting_YieldingActivity:
         break
       else:
         predictedSet.add(prediction)
-      if self.tokenEvaluationStrategy == "mixed":
+      if self.tokenEvaluationStrategy == arg_tokenEvaluationStrategy_choice_mixed:
         func = funcs[countPredictions%2] # Alternate between methods.
       countPredictions = countPredictions + 1
       countWords = countWords + TextActions.count_words(prediction)
@@ -79,9 +80,9 @@ class Predicting_YieldingActivity:
       yield prediction
       prediction = func(self.tokenChoices, prompt, self.predictUptoPosition, self.tokenizationSeparator)
       if prediction == "" and self.fuzzyFallbackSearch != None:
-        if self.fuzzyFallbackSearch == "first match":
+        if self.fuzzyFallbackSearch == arg_fuzzyFallbackSearch_choice_firstMatch:
           fallbackFunc = TokenActions.search_startswith_tokens
-        elif self.fuzzyFallbackSearch == "stochastic":
+        elif self.fuzzyFallbackSearch == arg_fuzzyFallbackSearch_choice_stochastic:
           fallbackFunc = TokenActions.search_startswith_tokens_stochastic
         begin = len(prompt) - maxTokenSize  # Try to match with larger criterion.
         while prediction == "" and begin < len(prompt):

@@ -19,6 +19,10 @@ root (script, license, readme)
 |    |
 |    |
 |    -- activity (modular managers of actions)
+|    |
+|    |
+|    -- assemblage (framework of execution, managing activities)
+|
 |
 -- tests
      |
@@ -34,8 +38,11 @@ root (script, license, readme)
 * Assemblage includes all parallelization and organization efforts of activities.
 
 ## Run
-python pretext.py --knowledge-files list_of_files_here
-### Example: _python pretext.py --knowledge-files pretext.py pretext/actions/token.py_
+Run _python pretext.py_ to see the usage template, or run _pythin pretext,py -h_ to get the detailed help.
+### Example - Learning from Specific Files: _python pretext.py --knowledge-files pretext.py pretext/actions/token.py_
+### Example - Learning from Specific Files in Directory: _python pretext.py --knowledge-files ~/Documents/\*__
+### Example - Learning with Custom Tokenization: _python pretext.py -k pretext.py pretext/actions/token.py -w 3 6 -c 11 21 31_
+### Example - Learning with Prompt for Prediction: _python pretext.py --knowledge-files pretext.py pretext/actions/token.py -p "Arti"_ 
 
 ## Test
 Running all tests: _python -m unittest discover tests_

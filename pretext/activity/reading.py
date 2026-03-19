@@ -10,6 +10,6 @@ class Reading_YieldingActivity:
   def act(self):
     for fileName in self.fileNames:
       text = FilesActions.read_text_file(fileName)
-      if self.configuration.commonWordReplacement != None: # Presence as an indicator of function.
+      if self.configuration.commonWordReplacement is not None: # Presence as an indicator of function.
         text = TextActions.remove_common_words(text, self.configuration.commonWordReplacement)
       yield text
